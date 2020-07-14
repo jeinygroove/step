@@ -18,6 +18,15 @@ main section {
     margin: 10px 0 10px 0;
 }
 
+a {
+    color: #22C9E0;
+    text-decoration: none;
+}
+
+a:hover, a:focus, a:active {
+    text-decoration: underline;
+}
+
 /* navigation bar */ 
 
 nav {
@@ -127,11 +136,11 @@ section.skills {
 }
 
 section.skills h3 {
-    font-size: 24px;
+    font-size: 26px;
 }
 
 section.skills p {
-    font-size: 16px;
+    font-size: 18px;
     padding-left: 10px;
 }
 
