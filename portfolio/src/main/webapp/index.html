@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
     <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
-    <script src="script.js"></script>
   </head>
   <body>
     <nav>
@@ -14,11 +13,11 @@
             <img src="images/logo.svg">
         </div>  
         <ul class="nav__items">
-            <li class="nav__item active">Home</li>
-            <li class="nav__item">Projects</li>
-            <li class="nav__item">Skills</li>
-            <li class="nav__item">Cats</li>
-            <li class="nav__item">Contacts</li>
+            <li class="nav__item home">Home</li>
+            <li class="nav__item projects">Projects</li>
+            <li class="nav__item skills">Skills</li>
+            <li class="nav__item cats">Cats</li>
+            <li class="nav__item contacts">Contacts</li>
         </ul>
     </nav>
     <main>
@@ -33,40 +32,42 @@
                 <li class="project">Huffman Archiver</li>
                 <li class="project">CYK with Chomsky Normal Form</li>
             </ul>
-            <p class="project_description active">
-                The web application for monitoring students activity,
-                motivating them with bonuses, which they can spend in the merch shop.
-                <br>
-                Technologies: TypeScript, Polymer, CSS, Bulma, Kotlin, MongoDB.
-                <br>
-                Done: SPA with events, projects, shop, personal pages, etc.
-                Finished API for some essential things.
-            </p>
-            <p class="project_description">
-                Funny bot which sends you a picture based on a tag that you've given.
-                Result can be REALLY strange, but that's all Imgur API, so we're 
-                out of business.
-                <br>
-                Technologies: Scala, Imgur API
-                <br>
-                Done: half of the whole project (wow, it's a finished project!)
-            </p>
-            <p class="project_description">
-                Just a Huffman Archiver on C++, beautiful code with smart pointers, 
-                casting and obvious algorithm for building Haffman tree. 
-                <br>
-                Interesting fact: my teacher said that I should use unique_ptr, and 
-                it wasn't so easy to add them because of priority queue, but I did it, and 
-                then he said: "oops, it wasn't necessary, actually".
-            </p>
-            <p class="project_description">
-                Just a CYK algorithm with the ability to convert context free grammar to 
-                chomsky normal form.
-                <br>
-                Technologies: Kotlin, ANTLR4
-                <br>
-                I almost died when I implemented CNF algorithm, it cost me 3 or 4 days of suffering and debug.
-            </p>
+            <div class="projects__descriptions">
+                <p class="project_description active">
+                    The web application for monitoring students activity,
+                    motivating them with bonuses, which they can spend in the merch shop.
+                    <br>
+                    Technologies: TypeScript, Polymer, CSS, Bulma, Kotlin, MongoDB.
+                    <br>
+                    Done: SPA with events, projects, shop, personal pages, etc.
+                    Finished API for some essential things.
+                </p>
+                <p class="project_description">
+                    Funny bot which sends you a picture based on a tag that you've given.
+                    Result can be REALLY strange, but that's all Imgur API, so we're 
+                    out of business.
+                    <br>
+                    Technologies: Scala, Imgur API
+                    <br>
+                    Done: half of the whole project (wow, it's a finished project!)
+                </p>
+                <p class="project_description">
+                    Just a Huffman Archiver on C++, beautiful code with smart pointers, 
+                    casting and obvious algorithm for building Haffman tree. 
+                    <br>
+                    Interesting fact: my teacher said that I should use unique_ptr, and 
+                    it wasn't so easy to add them because of priority queue, but I did it, and 
+                    then he said: "oops, it wasn't necessary, actually".
+                </p>
+                <p class="project_description">
+                    Just a CYK algorithm with the ability to convert context free grammar to 
+                    chomsky normal form.
+                    <br>
+                    Technologies: Kotlin, ANTLR4
+                    <br>
+                    I almost died when I implemented CNF algorithm, it cost me 3 or 4 days of suffering and debug.
+                </p>
+            </div>
         </section>
         <section class="skills">
             <div class="skills__technologies">
@@ -128,5 +129,6 @@
         </ul>
         <p class="email">olgashimanskaia@gmail.com</p>  
     </footer>
+    <script src="script.js"></script>
   </body>
 </html>

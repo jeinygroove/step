@@ -12,17 +12,47 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
+/* nav buttons */
 
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+var sections = ['.home', '.projects', '.cats', '.skills']
 
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+console.log(document.querySelector('section' + sections[0]))
+
+function makeScrollCallBack(section) {
+    return function() {
+        var sectionDOM = document.querySelector(section)
+        sectionDOM.scrollIntoView(); 
+        
+        var height = document.querySelector('nav').clientHeight;
+        var scrolledY = window.scrollY;
+        if (scrolledY === sectionDOM.offsetTop) {
+            window.scroll(0, scrolledY - height);
+        }
+    }
+}
+
+document.querySelector('.nav__logo').addEventListener('click', makeScrollCallBack('section.home'));
+
+for (var i = 0; i < sections.length; i++) {
+    document.querySelector('.nav__item' + sections[i]).addEventListener('click', makeScrollCallBack('section' + sections[i]));
+}
+
+document.querySelector('.nav__item.contacts').addEventListener('click', makeScrollCallBack('footer'));
+
+/* projects buttons */
+
+var listOfProjects = document.querySelector('.projects__names').childElementCount;
+
+function makeChangeDescriptionCallBack(project) {
+    return function() {
+        document.querySelector('.project.active').classList.remove('active');
+        document.querySelector('.projects__names').children[project].classList.add('active');
+        
+        document.querySelector('.project_description.active').classList.remove('active');
+        document.querySelector('.projects__descriptions').children[project].classList.add('active');
+    }
+}
+
+for (var i = 0; i < listOfProjects; i++) {
+    document.querySelector('.projects__names').children[i].addEventListener('click', makeChangeDescriptionCallBack(i));
 }

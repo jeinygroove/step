@@ -9,6 +9,11 @@ body {
     flex-direction: column;
 }
 
+main section.home {
+    padding-top: 60px;
+    margin-top: 0px;
+}
+
 main section {
     margin: 10px 0 10px 0;
 }
@@ -17,6 +22,7 @@ main section {
 
 nav {
     background-color: #22C9E0;
+    position: fixed;
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -46,55 +52,62 @@ nav {
     padding-bottom: 1px;
 }
 
-.nav__item.active {
+.nav__item:hover, .nav__item:focus {
     border-bottom: 2px solid white;
     padding-bottom: 1px;
 }
 
 /* home section */
 
-.home {
+section.home {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.home img {
+section.home img {
     width: 300px;
     height: auto;
     padding: 30px;
     border-radius: 20%;
 }
 
-.home p {
+section.home p {
     font-size: 28pt;
     padding: 30px;
 }
 
 /* projects section */
 
-.projects {
+section.projects {
     background: #F4F6F7;
     display: flex;
     flex-direction: row;
     align-items: center;
+    padding: 0;
+    margin: 0;
 }
 
 .projects__names {
     list-style-type: none;
     padding-right: 50px;
-    
+    padding-left: 30px;
 }
 
 .projects__names li {
     padding: 5px 0 5px 0;
+    width: 300px;
     text-align: center;
     font-size: 20px;
 }
 
-.project.active {
+.project.active, .project:hover, .project:focus {
     background: #22C9E0;
     color: white;
+}
+
+.projects__descriptions {
+    padding-right: 30px;
 }
 
 .project_description {
@@ -109,26 +122,26 @@ nav {
 
 /* skills section */
 
-.skills {
+section.skills {
     padding-left: 30px;
 }
 
-.skills h3 {
+section.skills h3 {
     font-size: 24px;
 }
 
-.skills p {
+section.skills p {
     font-size: 16px;
     padding-left: 10px;
 }
 
 /* cats section */
 
-.cats {
+section.cats {
     background: #F4F6F7;
 }
 
-.cats ul {
+section.cats ul {
     list-style-type: none;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
