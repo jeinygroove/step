@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/* nav buttons */
-
-var sections = ['.home', '.projects', '.cats', '.skills', '.contacts']
-
 /**
  * Return function, which moves to the section with index 'sectionIndex' and,
  * if the navbar ('nav') will hide part of the
  * section's contect, scrolls up by the navbar height.
- * @param  {int} sectionIndex [index number of the section]
- * @return {function}         [callback function for the event]
+ * @param  {number} sectionIndex index number of the section
+ * @return {function}            callback function for the event
 */
 function makeScrollCallBack(sectionIndex) {
     return function() {
@@ -36,22 +32,12 @@ function makeScrollCallBack(sectionIndex) {
     }
 }
 
-document.querySelector('.nav-logo').addEventListener('click', makeScrollCallBack('.home-section'));
-
-for (var i = 0; i < sections.length; i++) {
-    document.querySelector('.nav-item' + sections[i]).addEventListener('click', makeScrollCallBack(sections[i] + '-section'));
-}
-
-/* projects buttons */
-
-var listOfProjects = document.querySelector('.projects-names').childElementCount;
-
 /**
  * Return function, which hides old description (which has class 'active')
  * and replaces it with the new chosen,
  * changes styles for chosen '.project-name' and old '.project-name.active'.
- * @param  {int} projectIndex [index number of the project name and its description, respectively]
- * @return {function}         [callback function for the event]
+ * @param  {number} projectIndex index number of the project name and its description, respectively
+ * @return {function}            callback function for the event
 */
 function makeChangeDescriptionCallBack(projectIndex) {
     return function() {
@@ -62,6 +48,20 @@ function makeChangeDescriptionCallBack(projectIndex) {
         document.querySelector('.projects-descriptions').children[projectIndex].classList.add('active');
     }
 }
+
+/* nav buttons */
+
+var sections = ['.home', '.projects', '.cats', '.skills', '.contacts']
+
+document.querySelector('.nav-logo').addEventListener('click', makeScrollCallBack('.home-section'));
+
+for (var i = 0; i < sections.length; i++) {
+    document.querySelector('.nav-item' + sections[i]).addEventListener('click', makeScrollCallBack(sections[i] + '-section'));
+}
+
+/* projects buttons */
+
+var listOfProjects = document.querySelector('.projects-names').childElementCount;
 
 for (var i = 0; i < listOfProjects; i++) {
     // After clicking on '.project-name' change the visible '.project-description'
