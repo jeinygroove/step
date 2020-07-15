@@ -4,15 +4,144 @@
     <meta charset="UTF-8">
     <title>My Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
   </head>
   <body>
-    <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
-    </div>
+    <nav>
+        <div class="nav-logo">
+            <img src="images/logo.svg">
+        </div>  
+        <ul class="nav-items">
+            <li class="nav-item home">Home</li>
+            <li class="nav-item projects">Projects</li>
+            <li class="nav-item skills">Skills</li>
+            <li class="nav-item cats">Cats</li>
+            <li class="nav-item contacts">Contacts</li>
+        </ul>
+    </nav>
+    <main>
+        <section class="home-section">
+            <img class="home-photo" src="images/anime-me.jpeg">
+            <p class="home-text">Hi! My name is Olya and this is my personal page.</p>
+        </section>
+        <section class="projects-section">
+            <ul class="projects-names">
+                <li class="project-name active">BigSister</li>
+                <li class="project-name">Scala Images Bot</li>
+                <li class="project-name">Huffman Archiver</li>
+                <li class="project-name">CYK with Chomsky Normal Form</li>
+            </ul>
+            <div class="projects-descriptions">
+                <p class="project-description active">
+                    The web application for monitoring student's activity,
+                    motivating them with bonuses, which they can spend in the merch shop.
+                    <br>
+                    Technologies: TypeScript, Polymer, CSS, Bulma, Kotlin, MongoDB.
+                    <br>
+                    Done: SPA with events, projects, shop, personal pages, etc.
+                    Finished API with some essential things.
+                    <br>
+                    Link: it's a private repository :(
+                </p>
+                <p class="project-description">
+                    Funny bot which sends you a picture based on a tags that you've sent.
+                    Result can be REALLY strange, but that's all Imgur API, so we're 
+                    out of business.
+                    <br>
+                    Technologies: Scala, Imgur API.
+                    <br>
+                    Done: half of the whole project (wow, it's a finished project!)
+                    <br>
+                    <a href="https://github.com/vsalavatov/bsse-2020-scala-tg-bot">Link to the repository</a>
+                </p>
+                <p class="project-description">
+                    Just a Huffman Archiver on C++, beautiful code with smart pointers, 
+                    casting and obvious algorithm for building Haffman tree. 
+                    <br>
+                    Interesting fact: my teacher insisted that I should use unique_ptr, and 
+                    it wasn't so easy to add them because of priority queue, but I did it and 
+                    then he said: "oops, it wasn't necessary, actually".
+                    <br>
+                    <a href="https://github.com/jeinygroove/Huffman-Archiver">Link to the repository</a>
+                </p>
+                <p class="project-description">
+                    Just a CYK algorithm with the ability to convert context free grammar to 
+                    chomsky normal form. (CYK only works on grammars in CNF).
+                    <br>
+                    Technologies: Kotlin, ANTLR4.
+                    <br>
+                    I almost died while implementing CNF algorithm, it cost me 3 or 4 days of suffering and debug.
+                    <br>
+                    <a href="https://github.com/jeinygroove/fl_2020_spbu_spr/tree/HW10">Link to the repository</a>
+                    (maybe there'll be the day when I'll move this code to the separate repo)
+                </p>
+            </div>
+        </section>
+        <section class="skills-section">
+            <div class="skills-technologies">
+                <h3 class="skills-head">Technologies</h3>
+                <p class="skills-text">Kotlin, C++, HTML, CSS, JavaScript/TypeScript, Algorithms & Data Structures.</p>
+            </div>
+            <div class="skills-languages">
+                <h3 class="skills-head">Languages</h3>
+                <p class="skills-text">Russian(Native), English(B2), Spanish(A1/A2).</p>
+            </div>
+        </section>
+        <section class="cats-section">
+            <ul class="cats-list">
+                <li class="cat">
+                    <img class="cat-image" src="images/loki.png">
+                    <div class="cat-description">
+                        <h3 class="cat-head">Loki</h3>
+                        <p class="cat-text">Cute ball of fur and fat. Lives in Omsk, spends his summer in the country house with
+                        his friends, catches mice, tries to catch a sparrow sometimes, but unsuccessfully.</p>
+                    </div>
+                </li>
+                <li class="cat">
+                    <img class="cat-image" src="images/cheburek.png">
+                    <div class="cat-description">
+                        <h3 class="cat-head">Cheburek</h3>
+                        <p class="cat-text">The most affectionate and impudent cat in the world. Lives with my sister and Belyash. 
+                        Likes watching TV, sit on people's lap and eat.</p>
+                    </div>
+                </li>
+                <li class="cat">
+                    <img class="cat-image" src="images/belyash.png">
+                    <div class="cat-description">
+                        <h3 class="cat-head">Belyash</h3>
+                        <p class="cat-text">Arrogant and handsome. Lives with my sister and Cheburek. Likes to talk with me, but I don't
+                        understand cat's language. Doesn't like to sit on people's lap or being picked up. Likes to
+                        put his face in sneackers.</p>
+                    </div>
+                </li>
+            </ul>
+        </section>     
+    </main>
+    <footer class="contacts-section">
+        <ul class="contacts-icons">
+            <li class="contact-icon">
+                <a class="icon-link" href="https://www.facebook.com/profile.php?id=100053338170239">
+                    <img class="facebook-icon" src="images/facebook.png"></img>
+                </a>
+            </li>
+            <li class="contact-icon">
+                <a class="icon-link" href="https://www.instagram.com/jeiny_groove/">
+                    <img class="instagram-icon" src="images/instagram.png"></img>
+                </a>
+            </li>
+            <li class="contact-icon">
+                <a class="icon-link" href="https://github.com/jeinygroove">
+                    <img class="github-icon" src="images/github.png"></img>
+                </a>
+            </li>
+            <li class="contact-icon">
+                <a class="icon-link" href="https://www.linkedin.com/in/olga-shimanskaia-988540195/">
+                    <img class="linkedin-icon" src="images/linkedin.png"></img>
+                </a>
+            </li>
+        </ul>
+        <p class="email">olgashimanskaia@gmail.com</p>  
+    </footer>
+    <script src="script.js"></script>
   </body>
 </html>
