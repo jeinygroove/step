@@ -14,13 +14,18 @@
 
 /* nav buttons */
 
-var sections = ['.home', '.projects', '.cats', '.skills']
+var sections = ['.home', '.projects', '.cats', '.skills', '.contacts']
 
-console.log(document.querySelector('section' + sections[0]))
-
-function makeScrollCallBack(section) {
+/**
+ * Return function, which moves to the section with index 'sectionIndex' and,
+ * if the navbar ('nav') will hide part of the
+ * section's contect, scrolls up by the navbar height.
+ * @param  {int} sectionIndex [index number of the section]
+ * @return {function}         [callback function for the event]
+*/
+function makeScrollCallBack(sectionIndex) {
     return function() {
-        var sectionDOM = document.querySelector(section)
+        var sectionDOM = document.querySelector(sectionIndex)
         sectionDOM.scrollIntoView(); 
         
         var height = document.querySelector('nav').clientHeight;
@@ -31,28 +36,34 @@ function makeScrollCallBack(section) {
     }
 }
 
-document.querySelector('.nav__logo').addEventListener('click', makeScrollCallBack('section.home'));
+document.querySelector('.nav-logo').addEventListener('click', makeScrollCallBack('.home-section'));
 
 for (var i = 0; i < sections.length; i++) {
-    document.querySelector('.nav__item' + sections[i]).addEventListener('click', makeScrollCallBack('section' + sections[i]));
+    document.querySelector('.nav-item' + sections[i]).addEventListener('click', makeScrollCallBack(sections[i] + '-section'));
 }
-
-document.querySelector('.nav__item.contacts').addEventListener('click', makeScrollCallBack('footer'));
 
 /* projects buttons */
 
-var listOfProjects = document.querySelector('.projects__names').childElementCount;
+var listOfProjects = document.querySelector('.projects-names').childElementCount;
 
-function makeChangeDescriptionCallBack(project) {
+/**
+ * Return function, which hides old description (which has class 'active')
+ * and replaces it with the new chosen,
+ * changes styles for chosen '.project-name' and old '.project-name.active'.
+ * @param  {int} projectIndex [index number of the project name and its description, respectively]
+ * @return {function}         [callback function for the event]
+*/
+function makeChangeDescriptionCallBack(projectIndex) {
     return function() {
-        document.querySelector('.project.active').classList.remove('active');
-        document.querySelector('.projects__names').children[project].classList.add('active');
+        document.querySelector('.project-name.active').classList.remove('active');
+        document.querySelector('.projects-names').children[projectIndex].classList.add('active');
         
-        document.querySelector('.project_description.active').classList.remove('active');
-        document.querySelector('.projects__descriptions').children[project].classList.add('active');
+        document.querySelector('.project-description.active').classList.remove('active');
+        document.querySelector('.projects-descriptions').children[projectIndex].classList.add('active');
     }
 }
 
 for (var i = 0; i < listOfProjects; i++) {
-    document.querySelector('.projects__names').children[i].addEventListener('click', makeChangeDescriptionCallBack(i));
+    // After clicking on '.project-name' change the visible '.project-description'
+    document.querySelector('.projects-names').children[i].addEventListener('click', makeChangeDescriptionCallBack(i));
 }

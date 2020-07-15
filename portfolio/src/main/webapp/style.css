@@ -9,7 +9,7 @@ body {
     flex-direction: column;
 }
 
-main section.home {
+.home-section {
     padding-top: 60px;
     margin-top: 0px;
 }
@@ -38,12 +38,12 @@ nav {
     align-items: center;
 }
 
-.nav__logo {
+.nav-logo {
     padding-left: 50px;
     padding-right: 50px;
 }
 
-.nav__items {
+.nav-items {
     display: flex;
     justify-content: center;
     flex-direction: row;
@@ -53,7 +53,7 @@ nav {
     width: 100%;
 }
 
-.nav__item {
+.nav-item {
     padding: 0 25px 0 25px;
     font-size: 17pt;
     color: white;
@@ -61,34 +61,34 @@ nav {
     padding-bottom: 1px;
 }
 
-.nav__item:hover, .nav__item:focus {
+.nav-item:hover, .nav-item:focus {
     border-bottom: 2px solid white;
     padding-bottom: 1px;
 }
 
 /* home section */
 
-section.home {
+.home-section {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-section.home img {
+.home-photo {
     width: 300px;
     height: auto;
     padding: 30px;
     border-radius: 20%;
 }
 
-section.home p {
+.home-text {
     font-size: 28pt;
     padding: 30px;
 }
 
 /* projects section */
 
-section.projects {
+.projects-section {
     background: #F4F6F7;
     display: flex;
     flex-direction: row;
@@ -97,60 +97,60 @@ section.projects {
     margin: 0;
 }
 
-.projects__names {
+.projects-names {
     list-style-type: none;
     padding-right: 50px;
     padding-left: 30px;
 }
 
-.projects__names li {
+.project-name {
     padding: 5px 0 5px 0;
     width: 300px;
     text-align: center;
     font-size: 20px;
 }
 
-.project.active, .project:hover, .project:focus {
+.project-name.active, .project-name:hover, .project-name:focus {
     background: #22C9E0;
     color: white;
 }
 
-.projects__descriptions {
+.projects-descriptions {
     padding-right: 30px;
 }
 
-.project_description {
+.project-description {
     display: none;
     padding-left: 25px;
 }
 
-.project_description.active {
+.project-description.active {
     display: block;
     font-size: 16pt;
 }
 
 /* skills section */
 
-section.skills {
+.skills-section {
     padding-left: 30px;
 }
 
-section.skills h3 {
+.skills-head {
     font-size: 26px;
 }
 
-section.skills p {
+.skills-text {
     font-size: 18px;
     padding-left: 10px;
 }
 
 /* cats section */
 
-section.cats {
+.cats-section {
     background: #F4F6F7;
 }
 
-section.cats ul {
+.cats-list {
     list-style-type: none;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -167,28 +167,28 @@ section.cats ul {
     margin: 0;
 }
 
-.cat:hover img {
+.cat:hover .cat-image {
     opacity: 0;
 }
 
-.cat:hover .cat_description {
+.cat:hover .cat-description {
     opacity: 1;
 }
 
-.cat img, .cat_description {
+.cat-image, .cat-description {
     height: auto;
     display: block;
     margin: 0 auto;
     transition: opacity 0.5s ease-in-out;
 }
 
-.cat img {
+.cat-image {
     width: 300px;
     display: block;
     margin: 0 auto;
 }
 
-.cat_description {
+.cat-description {
     width: 280px;
     position: absolute;
     top: 0;
@@ -198,17 +198,17 @@ section.cats ul {
     opacity: 0;
 }
 
-.cat_description h3 {
+.cat-head {
     font-size: 24px;
 }
 
-.cat_description p {
+.cat-text {
     font-size: 18px;
 }
 
 /* footer contacts */
 
-footer {
+.contacts-section {
     background-color: #22C9E0; 
     display: flex;
     justify-content: center;
@@ -216,7 +216,7 @@ footer {
     flex-direction: column;
 }
 
-footer ul {
+.contacts-icons {
     padding: 0;
     list-style-type: none;
     display: flex;
@@ -224,38 +224,30 @@ footer ul {
     flex-direction: row;
 }
 
-.facebook_icon, .instagram_icon, .github_icon {
+.facebook-icon, .instagram-icon, .github-icon {
     width: 3em;
     height: auto;
 }
 
-.linkedin_icon {
+.linkedin-icon {
     width: 56px;
     height: auto;
 }
 
-footer ul li {
+.contact-icon {
     padding: 25px;
 }
 
-.icon_link {
+.icon-link {
     text-decoration: none;
 } 
 
-.icon_link:visited {
+.icon-link:visited {
     outline: none;
     text-decoration: none;
 }
 
-.icon_link i {
-    color: black;
-}
-
-.icon_link:hover i {
-    color: #1C1E21;
-}
-
-footer p {
+.email {
     font-size: 18px;
     text-align: center;
     padding-bottom: 20px;
