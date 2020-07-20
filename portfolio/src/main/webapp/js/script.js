@@ -18,12 +18,12 @@
  * section's contect, scrolls up by the navbar height.
  * @param  {number} sectionIndex index number of the section
  * @return {function}            callback function for the event
-*/
+ */
 function makeScrollCallBack(sectionIndex) {
-    return function() {
+    return function () {
         var sectionDOM = document.querySelector(sectionIndex)
-        sectionDOM.scrollIntoView(); 
-        
+        sectionDOM.scrollIntoView();
+
         var height = document.querySelector('nav').clientHeight;
         var scrolledY = window.scrollY;
         if (scrolledY === sectionDOM.offsetTop) {
@@ -38,16 +38,22 @@ function makeScrollCallBack(sectionIndex) {
  * changes styles for chosen '.project-name' and old '.project-name.active'.
  * @param  {number} projectIndex index number of the project name and its description, respectively
  * @return {function}            callback function for the event
-*/
+ */
 function makeChangeDescriptionCallBack(projectIndex) {
-    return function() {
+    return function () {
         document.querySelector('.project-name.active').classList.remove('active');
         document.querySelector('.projects-names').children[projectIndex].classList.add('active');
-        
+
         document.querySelector('.project-description.active').classList.remove('active');
         document.querySelector('.projects-descriptions').children[projectIndex].classList.add('active');
     }
 }
+
+/* comment button */
+
+document.querySelector('.home-comment-btn').addEventListener('click', function () {
+    document.location.href = '/comments.html';
+})
 
 /* nav buttons */
 
