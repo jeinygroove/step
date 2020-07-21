@@ -63,7 +63,7 @@ else {
  * @param  {number} rating     rating of the comment
  * @param  {String} date       date of the comment publication
  * @param  {String} commentID  comment id
- * */
+ */
 function createListElement(text, rating, date, commentID) {
     const liElement = document.createElement('li');
     liElement.classList.add('comment');
@@ -93,14 +93,13 @@ function createListElement(text, rating, date, commentID) {
     return liElement;
 }
 
-/* add event listener to the logo */
-
+// add event listener to the logo
 document.querySelector('.nav-logo').addEventListener('click', function () {
     document.location.href = '/';
 });
 
-/* comments sort by selector */
 
+// comments sort by selector
 for (const dropdown of document.querySelectorAll(".sort-type-select-wrapper")) {
     dropdown.addEventListener('click', function () {
         this.querySelector('.sort-type-select').classList.toggle('open');
@@ -127,11 +126,9 @@ for (const option of document.querySelectorAll(".sort-option")) {
     })
 }
 
-/* upvote and downvote buttons event listeners */
-
+// upvote and downvote buttons event listeners
 for (const btn of document.querySelectorAll(".upvote-btn")) {
     btn.addEventListener('click', function () {
-        console.log('kekkk');
         const commentID = this.parentNode.parentNode.id;
         voteComment(true, commentID);
     })
@@ -144,8 +141,7 @@ for (const btn of document.querySelectorAll(".downvote-btn")) {
     })
 }
 
-/* event listener for the delete comment button */
-
+// event listener for the delete comment button
 for (const btn of document.querySelectorAll(".delete-btn")) {
     btn.addEventListener('click', function() {
         const commentID = this.parentNode.id;

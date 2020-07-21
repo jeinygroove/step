@@ -1,5 +1,4 @@
 /* home section */
-
 .home-section {
     display: flex;
     flex-direction: row;
@@ -37,7 +36,6 @@
 }
 
 /* projects section */
-
 .projects-section {
     background: #F4F6F7;
     display: flex;
@@ -80,7 +78,6 @@
 }
 
 /* skills section */
-
 .skills-section {
     padding-left: 30px;
 }
@@ -95,7 +92,6 @@
 }
 
 /* cats section */
-
 .cats-section {
     background: #F4F6F7;
 }
@@ -157,7 +153,6 @@
 }
 
 /* footer contacts */
-
 .contacts-section {
     background-color: #22C9E0;
     display: flex;
@@ -202,4 +197,3 @@
     text-align: center;
     padding-bottom: 20px;
 }
-

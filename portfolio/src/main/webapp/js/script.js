@@ -49,14 +49,12 @@ function makeChangeDescriptionCallBack(projectIndex) {
     }
 }
 
-/* comment button */
-
+// comment button
 document.querySelector('.home-comment-btn').addEventListener('click', function () {
     document.location.href = '/comments.html';
 });
 
-/* nav buttons */
-
+// nav buttons
 var sections = ['.home', '.projects', '.cats', '.skills', '.contacts'];
 
 document.querySelector('.nav-logo').addEventListener('click', makeScrollCallBack('.home-section'));
@@ -65,8 +63,8 @@ for (var i = 0; i < sections.length; i++) {
     document.querySelector('.nav-item' + sections[i]).addEventListener('click', makeScrollCallBack(sections[i] + '-section'));
 }
 
-/* projects buttons */
 
+// projects names buttons
 var listOfProjects = document.querySelector('.projects-names').childElementCount;
 
 for (var i = 0; i < listOfProjects; i++) {
