@@ -1,5 +1,7 @@
 package com.google.sps.data;
 
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.Query;
 import java.util.*;
 
 
@@ -7,83 +9,108 @@ public class Comments {
     public static class Comment {
         private Date date;
         private String text;
-        private int rating;
+        private long rating;
 
-        public Comment(String text) {
-            this.date = new Date();
+        public Comment(Date date, String text, long rating) {
+            this.date = date;
             this.text = text;
-            this.rating = 0;
+            this.rating = rating;
         }
 
         public Date getDate() {
-            return this.date;
+            return date;
+        }
+
+        public long getRating() {
+            return rating;
         }
 
         public String getText() {
-            return this.text;
-        }
-
-        public int getRating() {
-            return this.rating;
-        }
-
-        public void upvote() {
-            this.rating++;
-        }
-
-        public void downvote() {
-            this.rating--;
+            return text;
         }
     }
 
-    private HashMap<UUID, Comment> comments;
+    private DatastoreService datastore;
 
     public Comments() {
-        this.comments = new HashMap<>();
+        this.datastore = DatastoreServiceFactory.getDatastoreService();
     }
 
     public void addComment(String text) {
-        this.comments.put(UUID.randomUUID(), new Comment(text));
+        Entity commentEntity = new Entity("Comment");
+        commentEntity.setProperty("date", new Date());
+        commentEntity.setProperty("text", text);
+        commentEntity.setProperty("rating", 0);
+
+        datastore.put(commentEntity);
     }
 
-    public Comment getComment(UUID id) {
-        return this.comments.get(id);
+    private Comment getCommentFromEntity(Entity entity) {
+        Date date = (Date) entity.getProperty("date");
+        String text = (String) entity.getProperty("text");
+        long rating = (long) entity.getProperty("rating");
+        return new Comment(date, text, rating);
     }
 
-    public void deleteComment(UUID id) {
-        this.comments.remove(id);
+    public Comment getComment(long id) {
+        try {
+            Entity commentEntity = getCommentEntity(id);
+            return getCommentFromEntity(commentEntity);
+        } catch (EntityNotFoundException e) {
+            return null;
+        }
     }
 
-    private ArrayList<Map.Entry<UUID, Comment>> sortBy(Comparator<Map.Entry<UUID, Comment>> comparator) {
-        // Create a list from elements of HashMap
-        List<Map.Entry<UUID, Comment>> list =
-                new LinkedList<>(comments.entrySet());
+    public void deleteComment(long id) {
+        Key commentEntityKey = KeyFactory.createKey("Comment", id);
+        this.datastore.delete(commentEntityKey);
+    }
 
-        // Sort the list
-        Collections.sort(list, comparator);
+    private ArrayList<Map.Entry<Long, Comment>> modifyWithQuery(Query query) {
+        ArrayList<Map.Entry<Long, Comment>> result = new ArrayList<>();
+        PreparedQuery commentEntities = this.datastore.prepare(query);
 
-        // Put data from sorted list to hashmap
-        ArrayList<Map.Entry<UUID, Comment>> temp = new ArrayList<>();
-        for (Map.Entry<UUID, Comment> aa : list) {
-            temp.add(new AbstractMap.SimpleEntry(aa.getKey(), aa.getValue()));
+        for (Entity entity : commentEntities.asIterable()) {
+            long id = entity.getKey().getId();
+            Comment comment = getCommentFromEntity(entity);
+            result.add(new AbstractMap.SimpleEntry(id, comment));
         }
 
-        return temp;
+        return result;
     }
 
-    public ArrayList<Map.Entry<UUID, Comment>> sortByDate() {
-        return sortBy(Comparator.comparing((Map.Entry<UUID, Comment> o) -> (o.getValue().getDate())).reversed());
+    public ArrayList<Map.Entry<Long, Comment>> sortByDate() {
+        Query query = new Query("Comment").addSort("date", Query.SortDirection.DESCENDING);
+        return modifyWithQuery(query);
     }
 
-    public ArrayList<Map.Entry<UUID, Comment>> sortByRating() {
-        return sortBy(Comparator.comparingInt((Map.Entry<UUID, Comment> o) -> o.getValue().getRating()).reversed());
+    public ArrayList<Map.Entry<Long, Comment>> sortByRating() {
+        Query query = new Query("Comment").addSort("rating", Query.SortDirection.DESCENDING);
+        return modifyWithQuery(query);
     }
 
-    public void upvoteComment(UUID id) {
-        this.comments.get(id).upvote();
+    private Entity getCommentEntity(long id) throws EntityNotFoundException {
+        Key commentEntityKey = KeyFactory.createKey("Comment", id);
+        return this.datastore.get(commentEntityKey);
     }
 
-    public void downvoteComment(UUID id) {
-        this.comments.get(id).downvote();
+    public void upvoteComment(long id) {
+        try {
+            Entity commentEntity = getCommentEntity(id);
+            long rating = (long) commentEntity.getProperty("rating");
+            commentEntity.setProperty("rating", rating + 1);
+            this.datastore.put(commentEntity);
+        } catch (EntityNotFoundException e) {
+        }
+    }
+
+    public void downvoteComment(long id) {
+        try {
+            Entity commentEntity = getCommentEntity(id);
+            long rating = (long) commentEntity.getProperty("rating");
+            commentEntity.setProperty("rating", rating - 1);
+            this.datastore.put(commentEntity);
+        } catch (EntityNotFoundException e) {
+        }
     }
 }

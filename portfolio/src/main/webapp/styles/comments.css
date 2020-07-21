@@ -215,6 +215,7 @@ main {
 }
 
 .comment {
+    position: relative;
     border: 1px solid #22C9E0;
     border-radius: 10px;
     display: flex;
@@ -281,6 +282,17 @@ main {
     text-align: end;
     bottom: 0;
     margin-top: 0;
+}
+
+
+/* delete comment button */
+
+.delete-btn {
+    width: 40px;
+    height: auto;
+    position: absolute;
+    right: -20px;
+    top: -20px;
 }
 
 

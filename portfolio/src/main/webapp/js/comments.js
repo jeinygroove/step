@@ -29,9 +29,25 @@ function voteComment(isUpvote, commentID) {
     params.append('isUpvote', isUpvote);
     fetch('/comments', {method: 'POST', body: params}).then(response => {
         if (response.status === 200)
-            response.json().then(getComments(selectedSortType));
+            getComments(selectedSortType);
         else
-            console.error(r.message);
+            console.error(response.message);
+    });
+}
+
+/**
+ * Delete comment with the given ID
+ * @param  {String}  commentID  id of comment for voting
+ */
+function deleteComment(commentID) {
+    var params = new URLSearchParams();
+    params.append('comment-id', commentID);
+    params.append('action', 'delete');
+    fetch('/comments', {method: 'POST', body: params}).then(response => {
+        if (response.status === 200)
+            getComments(selectedSortType);
+        else
+            console.error(response.message);
     });
 }
 
@@ -53,10 +69,14 @@ function createListElement(text, rating, date, commentID) {
             <p class="rating">` + rating + `</p>
             <div class="downvote-btn" type="button"></div>
         </div>
+        <img class="delete-btn" src="images/delete-btn4.png">
         <div class="comment-content">
             <p class="comment-text">` + text + `</p>
             <p class="comment-date">` + date + `</p>
         </div>`;
+    liElement.querySelector('.delete-btn').addEventListener('click', function() {
+        deleteComment(commentID);
+    })
     liElement.querySelector('.upvote-btn').addEventListener('click', () => {
         voteComment(true, commentID)
     });
@@ -114,5 +134,14 @@ for (const btn of document.querySelectorAll(".downvote-btn")) {
     btn.addEventListener('click', function () {
         const commentID = this.parentNode.parentNode.id;
         voteComment(false, commentID);
+    })
+}
+
+/* event listener for the delete comment button */
+
+for (const btn of document.querySelectorAll(".delete-btn")) {
+    btn.addEventListener('click', function() {
+        const commentID = this.parentNode.id;
+        deleteComment(commentID);
     })
 }

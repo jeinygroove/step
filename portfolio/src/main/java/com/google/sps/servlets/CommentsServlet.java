@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.UUID;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -56,14 +55,13 @@ public class CommentsServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("application/json");
         String action = request.getParameter("action");
         if (action.equals("add")) {
             String text = request.getParameter("comment-text");
             comments.addComment(text);
         } else if (action.equals("vote")) {
             String isUpvote = request.getParameter("isUpvote");
-            UUID commentID = UUID.fromString(request.getParameter("comment-id"));
+            long commentID = Long.parseLong(request.getParameter("comment-id"));
             if (isUpvote.equals("true")) {
                 comments.upvoteComment(commentID);
             } else if (isUpvote.equals("false")) {
@@ -71,15 +69,16 @@ public class CommentsServlet extends HttpServlet {
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             }
-            JsonObject json = new JsonObject();
-            json.addProperty("rating", comments.getComment(commentID).getRating());
-            response.getWriter().println(json.toString());
-            return;
+        } else if (action.equals("delete")) {
+            long commentID = Long.parseLong(request.getParameter("comment-id"));
+            comments.deleteComment(commentID);
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
         response.sendRedirect("/comments.html");
     }
 
-    private String convertToJson(ArrayList<Map.Entry<UUID, Comments.Comment>> comments) {
+    private String convertToJson(ArrayList<Map.Entry<Long, Comments.Comment>> comments) {
         return gson.toJson(comments);
     }
 }
