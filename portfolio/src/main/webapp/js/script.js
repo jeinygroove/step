@@ -21,7 +21,7 @@
  */
 function makeScrollCallBack(sectionIndex) {
     return function () {
-        var sectionDOM = document.querySelector(sectionIndex)
+        var sectionDOM = document.querySelector(sectionIndex);
         sectionDOM.scrollIntoView();
 
         var height = document.querySelector('nav').clientHeight;
@@ -53,11 +53,11 @@ function makeChangeDescriptionCallBack(projectIndex) {
 
 document.querySelector('.home-comment-btn').addEventListener('click', function () {
     document.location.href = '/comments.html';
-})
+});
 
 /* nav buttons */
 
-var sections = ['.home', '.projects', '.cats', '.skills', '.contacts']
+var sections = ['.home', '.projects', '.cats', '.skills', '.contacts'];
 
 document.querySelector('.nav-logo').addEventListener('click', makeScrollCallBack('.home-section'));
 

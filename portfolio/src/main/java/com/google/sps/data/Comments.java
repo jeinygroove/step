@@ -100,8 +100,7 @@ public class Comments {
             long rating = (long) commentEntity.getProperty("rating");
             commentEntity.setProperty("rating", rating + 1);
             this.datastore.put(commentEntity);
-        } catch (EntityNotFoundException e) {
-        }
+        } catch (EntityNotFoundException ignored) {}
     }
 
     public void downvoteComment(long id) {
@@ -110,7 +109,6 @@ public class Comments {
             long rating = (long) commentEntity.getProperty("rating");
             commentEntity.setProperty("rating", rating - 1);
             this.datastore.put(commentEntity);
-        } catch (EntityNotFoundException e) {
-        }
+        } catch (EntityNotFoundException ignored) {}
     }
 }

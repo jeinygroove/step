@@ -58,7 +58,12 @@ else {
     selectedSortType = 'date';
 }
 
-/** Creates an <li> element containing text. */
+/** Creates an <li class="comment"> element.
+ * @param  {String} text       comment text
+ * @param  {number} rating     rating of the comment
+ * @param  {String} date       date of the comment publication
+ * @param  {String} commentID  comment id
+ * */
 function createListElement(text, rating, date, commentID) {
     const liElement = document.createElement('li');
     liElement.classList.add('comment');
@@ -74,9 +79,11 @@ function createListElement(text, rating, date, commentID) {
             <p class="comment-text">` + text + `</p>
             <p class="comment-date">` + date + `</p>
         </div>`;
+
+    // add event listeners for delete and vote buttons
     liElement.querySelector('.delete-btn').addEventListener('click', function() {
         deleteComment(commentID);
-    })
+    });
     liElement.querySelector('.upvote-btn').addEventListener('click', () => {
         voteComment(true, commentID)
     });
@@ -101,7 +108,7 @@ for (const dropdown of document.querySelectorAll(".sort-type-select-wrapper")) {
 }
 
 for (const option of document.querySelectorAll(".sort-option")) {
-    if (option.attributes['data-value'].value == selectedSortType) {
+    if (option.attributes['data-value'].value === selectedSortType) {
         option.parentNode.querySelector('.sort-option.selected').classList.remove('selected');
         option.classList.add('selected');
         option.closest('.sort-type-select').querySelector('.sort-type-select-trigger span').textContent = option.textContent;

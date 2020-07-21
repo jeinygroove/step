@@ -14,7 +14,6 @@
 
 package com.google.sps.servlets;
 
-import com.google.gson.JsonObject;
 import com.google.sps.data.Comments;
 
 import com.google.gson.Gson;
@@ -40,6 +39,9 @@ public class CommentsServlet extends HttpServlet {
         comments = new Comments();
     }
 
+    /**
+     * Get method, which sorts the comments based on the 'type' header.
+     */
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
@@ -53,27 +55,37 @@ public class CommentsServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Post method, make the action on the comment, based on the parameter 'action'.
+     */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String action = request.getParameter("action");
-        if (action.equals("add")) {
-            String text = request.getParameter("comment-text");
-            comments.addComment(text);
-        } else if (action.equals("vote")) {
-            String isUpvote = request.getParameter("isUpvote");
-            long commentID = Long.parseLong(request.getParameter("comment-id"));
-            if (isUpvote.equals("true")) {
-                comments.upvoteComment(commentID);
-            } else if (isUpvote.equals("false")) {
-                comments.downvoteComment(commentID);
-            } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        switch (action) {
+            case "add":
+                String text = request.getParameter("comment-text");
+                comments.addComment(text);
+                break;
+            case "vote": {
+                String isUpvote = request.getParameter("isUpvote");
+                long commentID = Long.parseLong(request.getParameter("comment-id"));
+                if (isUpvote.equals("true")) {
+                    comments.upvoteComment(commentID);
+                } else if (isUpvote.equals("false")) {
+                    comments.downvoteComment(commentID);
+                } else {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                }
+                break;
             }
-        } else if (action.equals("delete")) {
-            long commentID = Long.parseLong(request.getParameter("comment-id"));
-            comments.deleteComment(commentID);
-        } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            case "delete": {
+                long commentID = Long.parseLong(request.getParameter("comment-id"));
+                comments.deleteComment(commentID);
+                break;
+            }
+            default:
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                break;
         }
         response.sendRedirect("/comments.html");
     }
