@@ -31,8 +31,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/comments")
 public class CommentsServlet extends HttpServlet {
+
     private Comments comments;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     @Override
     public void init() {
@@ -46,10 +47,10 @@ public class CommentsServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
         String type = request.getHeader("type");
-        if (type.equals("date")) {
-            response.getWriter().println(convertToJson(comments.sortByDate()));
-        } else if (type.equals("rating")) {
-            response.getWriter().println(convertToJson(comments.sortByRating()));
+        if (Comments.DATE.equals(type)) {
+            response.getWriter().println(gson.toJson(comments.sortByDate()));
+        } else if (Comments.RATING.equals(type)) {
+            response.getWriter().println(gson.toJson(comments.sortByRating()));
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -63,7 +64,7 @@ public class CommentsServlet extends HttpServlet {
         String action = request.getParameter("action");
         switch (action) {
             case "add":
-                String text = request.getParameter("comment-text");
+                String text = request.getParameter(Comments.TEXT);
                 comments.addComment(text);
                 break;
             case "vote": {
@@ -88,9 +89,5 @@ public class CommentsServlet extends HttpServlet {
                 break;
         }
         response.sendRedirect("/comments.html");
-    }
-
-    private String convertToJson(ArrayList<Map.Entry<Long, Comments.Comment>> comments) {
-        return gson.toJson(comments);
     }
 }
