@@ -2,6 +2,7 @@ package com.google.sps.data;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query;
+
 import java.util.*;
 
 /**
@@ -93,6 +94,25 @@ public class Comments {
     }
 
     /**
+     * Modifies comments in datastore with query and returns first 'n'.
+     * @param query    Query for datastore.
+     * @param n        Number of comments to return.
+     * @return List of pairs (Comment id, Comment object), sorted according to the query.
+     */
+    private ArrayList<Map.Entry<Long, Comment>> modifyWithQuery(Query query, int n) {
+        ArrayList<Map.Entry<Long, Comment>> result = new ArrayList<>();
+        List<Entity> commentEntities = this.datastore.prepare(query).asList(FetchOptions.Builder.withLimit(n));
+
+        for (Entity entity : commentEntities) {
+            long id = entity.getKey().getId();
+            Comment comment = getCommentFromEntity(entity);
+            result.add(new AbstractMap.SimpleEntry(id, comment));
+        }
+
+        return result;
+    }
+
+    /**
      * Sorts comments from datastore by the date in descending order.
      * @return List of pairs (Comment id, Comment object), sorted by the date in descending order.
      */
@@ -102,12 +122,32 @@ public class Comments {
     }
 
     /**
+     * Sorts comments from datastore by the date in descending order and return first 'n'.
+     * @param n        Number of comments to return.
+     * @return List of pairs (Comment id, Comment object), sorted by the date in descending order.
+     */
+    public ArrayList<Map.Entry<Long, Comment>> sortByDate(int n) {
+        Query query = new Query(COMMENT_ENTITY_KIND).addSort(DATE, Query.SortDirection.DESCENDING);
+        return modifyWithQuery(query, n);
+    }
+
+    /**
      * Sorts comments from datastore by the rating in descending order.
      * @return List of pairs (Comment id, Comment object), sorted by the rating in descending order.
      */
     public ArrayList<Map.Entry<Long, Comment>> sortByRating() {
         Query query = new Query(COMMENT_ENTITY_KIND).addSort(RATING, Query.SortDirection.DESCENDING);
         return modifyWithQuery(query);
+    }
+
+    /**
+     * Sorts comments from datastore by the rating in descending order and return first 'n'.
+     * @param n        Number of comments to return.
+     * @return List of pairs (Comment id, Comment object), sorted by the rating in descending order.
+     */
+    public ArrayList<Map.Entry<Long, Comment>> sortByRating(int n) {
+        Query query = new Query(COMMENT_ENTITY_KIND).addSort(RATING, Query.SortDirection.DESCENDING);
+        return modifyWithQuery(query, n);
     }
 
     /**

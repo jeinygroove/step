@@ -90,18 +90,25 @@ main {
     transform: scale(1.1);
 }
 
-/* sort selection */
+/* selection form */
 .comments-section {
     padding-left: 30px;
 }
 
-.sort-type-select-wrapper {
+.comments-sort-form {
+    display: flex;
+    padding: 0 30px 20px 0;
+    justify-content: flex-end;
+}
+
+.select-wrapper, .select-wrapper {
+    padding: 0 10px 0 10px;
     position: relative;
     user-select: none;
     width: 105px;
 }
 
-.sort-type-select {
+.select {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -110,7 +117,7 @@ main {
     border-color: black;
 }
 
-.sort-type-select-trigger {
+.select-trigger {
     position: relative;
     display: flex;
     align-items: center;
@@ -127,7 +134,7 @@ main {
     border-color: black;
 }
 
-.sort-options {
+.sort-options, .quantity-options {
     position: absolute;
     display: block;
     top: 100%;
@@ -141,14 +148,14 @@ main {
     pointer-events: none;
 }
 
-.sort-type-select.open .sort-options {
+.select.open .sort-options, .select.open .quantity-options {
     opacity: 1;
     visibility: visible;
     pointer-events: all;
     z-index: 2;
 }
 
-.sort-option {
+.sort-option, .quantity-option {
     position: relative;
     display: block;
     padding: 0 15px 0 15px;
@@ -158,16 +165,16 @@ main {
     line-height: 40px;
 }
 
-.sort-option:hover {
+.sort-option:hover, .quantity-option:hover {
     background-color: #F4F6F7;
 }
 
-.sort-option.selected {
+.sort-option.selected, .quantity-option.selected {
     color: white;
     background-color: #22C9E0;
 }
 
-/* sort type selector arrow */
+/* selector arrow */
 .arrow {
     position: relative;
     height: 10px;

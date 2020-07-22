@@ -1,13 +1,21 @@
-var selectedSortType = localStorage.getItem('sortType', selectedSortType);
+const sortItemName = 'sortType';
+const quantityItemName = 'commentsQuantity';
+
+var selectedSortType = localStorage.getItem(sortItemName, selectedSortType);
+var selectedQuantityOfComments = localStorage.getItem(quantityItemName, selectedQuantityOfComments);
 
 /**
- * Adds comments, sorted according to the 'type', to the list '.comments'
- * @param  {string}  type  type for sorting comments ('date' or 'rating'), if it's unknown type, then 'date' by default
+ * Adds first 'quantity' comments, sorted according to the 'type', to the list '.comments'
+ * @param  {string}  type      type for sorting comments ('date' or 'rating'), if it's unknown type, then 'date' by default
+ * @param  {string}  quantity  number of comments to return (it's a string representation of number or 'all')
  */
-function getComments(type) {
+function getComments(type, quantity) {
+    var url = new URL(window.location.protocol + "//" + window.location.host + '/comments');
     var params = new URLSearchParams();
     params.append('type', type);
-    fetch('/comments', {method: 'GET', headers: params}).then(response => response.json()).then((comments) => {
+    params.append('quantity', quantity);
+    url.search = params.toString();
+    fetch(url, {method: 'GET'}).then(response => response.json()).then((comments) => {
         const listOfCommentsDOM = document.querySelector('.comments-list');
         listOfCommentsDOM.innerHTML = '';
         for (var i = 0; i < comments.length; i++) {
@@ -30,7 +38,7 @@ function voteComment(isUpvote, commentID) {
     params.append('isUpvote', isUpvote);
     fetch('/comments', {method: 'POST', body: params}).then(response => {
         if (response.status === 200)
-            getComments(selectedSortType);
+            getComments(selectedSortType, selectedQuantityOfComments);
         else
             console.error(response.message);
     });
@@ -57,18 +65,19 @@ function deleteComment(commentID) {
     params.append('action', 'delete');
     fetch('/comments', {method: 'POST', body: params}).then(response => {
         if (response.status === 200)
-            getComments(selectedSortType);
+            getComments(selectedSortType, selectedQuantityOfComments);
         else
             console.error(response.message);
     });
 }
 
-if (selectedSortType === 'date' || selectedSortType === 'rating')
-    getComments(selectedSortType);
-else {
-    getComments('date');
+if (selectedSortType !== 'date' && selectedSortType !== 'rating')
     selectedSortType = 'date';
-}
+
+if (selectedQuantityOfComments === null || selectedQuantityOfComments === undefined)
+    selectedQuantityOfComments = 'all';
+
+getComments(selectedSortType, selectedQuantityOfComments);
 
 /** Creates an <li class="comment"> element.
  * @param  {String} text       comment text
@@ -108,10 +117,10 @@ function createListElement(text, rating, date, commentID) {
 /** Deletes 'selected' class from option, which have it, and adds it to the given option
  * @param  {Element} option  sort option which we want to select
  */
-function toggleSelectedClass(option) {
-    option.parentNode.querySelector('.sort-option.selected').classList.remove('selected');
+function toggleSelectedClass(option, className) {
+    option.parentNode.querySelector('.' + className + '.selected').classList.remove('selected');
     option.classList.add('selected');
-    option.closest('.sort-type-select').querySelector('.sort-type-select-trigger span').textContent = option.textContent;
+    option.closest('.select').querySelector('.select-trigger span').textContent = option.textContent;
 }
 
 // add event listener to the logo
@@ -119,25 +128,43 @@ document.querySelector('.nav-logo').addEventListener('click', function () {
     document.location.href = '/';
 });
 
-// comments sort by selector
-addClickListeners(".sort-type-select-wrapper", function () {
-    this.querySelector('.sort-type-select').classList.toggle('open');
+// comments selectors
+addClickListeners(".select-wrapper", function () {
+    this.querySelector('.select').classList.toggle('open');
 })
 
+// sort options
 for (const option of document.querySelectorAll(".sort-option")) {
     if (option.attributes['data-value'].value === selectedSortType) {
-        toggleSelectedClass(option);
+        toggleSelectedClass(option, 'sort-option');
     }
 }
 
 addClickListeners(".sort-option", function () {
     if (!this.classList.contains('selected')) {
-        toggleSelectedClass(this);
+        toggleSelectedClass(this, 'sort-option');
     }
     const type = this.attributes['data-value'].value;
     selectedSortType = type;
-    localStorage.setItem('sortType', selectedSortType);
-    getComments(type);
+    localStorage.setItem(sortItemName, selectedSortType);
+    getComments(selectedSortType, selectedQuantityOfComments);
+})
+
+// quantity options
+for (const option of document.querySelectorAll(".quantity-option")) {
+    if (option.attributes['data-value'].value === selectedQuantityOfComments) {
+        toggleSelectedClass(option, 'quantity-option');
+    }
+}
+
+addClickListeners(".quantity-option", function () {
+    if (!this.classList.contains('selected')) {
+        toggleSelectedClass(this, 'quantity-option');
+    }
+    const quantity = this.attributes['data-value'].value;
+    selectedQuantityOfComments = quantity;
+    localStorage.setItem(quantityItemName, selectedQuantityOfComments);
+    getComments(selectedSortType, selectedQuantityOfComments);
 })
 
 // upvote and downvote buttons event listeners
