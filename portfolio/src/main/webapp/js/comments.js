@@ -105,37 +105,40 @@ function createListElement(text, rating, date, commentID) {
     return liElement;
 }
 
+/** Deletes 'selected' class from option, which have it, and adds it to the given option
+ * @param  {Element} option  sort option which we want to select
+ */
+function toggleSelectedClass(option) {
+    option.parentNode.querySelector('.sort-option.selected').classList.remove('selected');
+    option.classList.add('selected');
+    option.closest('.sort-type-select').querySelector('.sort-type-select-trigger span').textContent = option.textContent;
+}
+
 // add event listener to the logo
 document.querySelector('.nav-logo').addEventListener('click', function () {
     document.location.href = '/';
 });
 
 // comments sort by selector
-for (const dropdown of document.querySelectorAll(".sort-type-select-wrapper")) {
-    dropdown.addEventListener('click', function () {
-        this.querySelector('.sort-type-select').classList.toggle('open');
-    })
-}
+addClickListeners(".sort-type-select-wrapper", function () {
+    this.querySelector('.sort-type-select').classList.toggle('open');
+})
 
 for (const option of document.querySelectorAll(".sort-option")) {
     if (option.attributes['data-value'].value === selectedSortType) {
-        option.parentNode.querySelector('.sort-option.selected').classList.remove('selected');
-        option.classList.add('selected');
-        option.closest('.sort-type-select').querySelector('.sort-type-select-trigger span').textContent = option.textContent;
+        toggleSelectedClass(option);
     }
-
-    option.addEventListener('click', function () {
-        if (!this.classList.contains('selected')) {
-            this.parentNode.querySelector('.sort-option.selected').classList.remove('selected');
-            this.classList.add('selected');
-            this.closest('.sort-type-select').querySelector('.sort-type-select-trigger span').textContent = this.textContent;
-        }
-        const type = this.attributes['data-value'].value;
-        selectedSortType = type;
-        localStorage.setItem('sortType', selectedSortType);
-        getComments(type);
-    })
 }
+
+addClickListeners(".sort-option", function () {
+    if (!this.classList.contains('selected')) {
+        toggleSelectedClass(this);
+    }
+    const type = this.attributes['data-value'].value;
+    selectedSortType = type;
+    localStorage.setItem('sortType', selectedSortType);
+    getComments(type);
+})
 
 // upvote and downvote buttons event listeners
 addClickListeners(".upvote-btn", function () {
@@ -153,25 +156,3 @@ addClickListeners(".delete-btn", function () {
     const commentID = this.parentNode.id;
     deleteComment(commentID);
 })
-
-/*for (const btn of document.querySelectorAll(".upvote-btn")) {
-    btn.addEventListener('click', function () {
-        const commentID = this.parentNode.parentNode.id;
-        voteComment(true, commentID);
-    })
-}
-
-for (const btn of document.querySelectorAll(".downvote-btn")) {
-    btn.addEventListener('click', function () {
-        const commentID = this.parentNode.parentNode.id;
-        voteComment(false, commentID);
-    })
-}
-
-// event listener for the delete comment button
-for (const btn of document.querySelectorAll(".delete-btn")) {
-    btn.addEventListener('click', function() {
-        const commentID = this.parentNode.id;
-        deleteComment(commentID);
-    })
-}*/
