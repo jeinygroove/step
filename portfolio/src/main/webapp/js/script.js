@@ -63,7 +63,6 @@ for (var i = 0; i < sections.length; i++) {
     document.querySelector('.nav-item' + sections[i]).addEventListener('click', makeScrollCallBack(sections[i] + '-section'));
 }
 
-
 // projects names buttons
 var listOfProjects = document.querySelector('.projects-names').childElementCount;
 

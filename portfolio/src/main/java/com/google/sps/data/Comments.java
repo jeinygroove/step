@@ -9,7 +9,7 @@ import java.util.*;
  * @author Olga Shimanskaia <olgashimanskaia@gmail.com>
  */
 public class Comments {
-    private final String COMMENT_ENTITY_KIND = "Comment";
+    private static final String COMMENT_ENTITY_KIND = "Comment";
     public static final String DATE = "date";
     public static final String RATING = "rating";
     public static final String TEXT = "comment-text";

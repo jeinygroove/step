@@ -70,9 +70,9 @@ public class CommentsServlet extends HttpServlet {
             case "vote": {
                 String isUpvote = request.getParameter("isUpvote");
                 long commentID = Long.parseLong(request.getParameter("comment-id"));
-                if (isUpvote.equals("true")) {
+                if ("true".equals(isUpvote)) {
                     comments.upvoteComment(commentID);
-                } else if (isUpvote.equals("false")) {
+                } else if ("false".equals(isUpvote)) {
                     comments.downvoteComment(commentID);
                 } else {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST);
