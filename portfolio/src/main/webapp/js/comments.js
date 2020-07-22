@@ -11,14 +11,15 @@ function getComments(type) {
         const listOfCommentsDOM = document.querySelector('.comments-list');
         listOfCommentsDOM.innerHTML = '';
         for (var i = 0; i < comments.length; i++) {
+            const comment = comments[i];
             listOfCommentsDOM.appendChild(
-                createListElement(comments[i].value.text, comments[i].value.rating, comments[i].value.date, comments[i].key));
+                createListElement(comment.value.text, comment.value.rating, comment.value.date, comment.key));
         }
     });
 }
 
 /**
- * Upvoted/Downvotes comment with the given ID
+ * Upvotes/Downvotes comment with the given ID
  * @param  {boolean}  isUpvote  true if we want to upvote and false if not
  * @param  {String}  commentID  id of comment for voting
  */
@@ -33,6 +34,17 @@ function voteComment(isUpvote, commentID) {
         else
             console.error(response.message);
     });
+}
+
+/**
+ * Adds 'click' event listeners with callbackFucntion to all elements with the specified class.
+ * @param  {String}  className         true if we want to upvote and false if not
+ * @param  {String}  callbackFunction  id of comment for voting
+ */
+function addClickListeners(className, callbackFunction) {
+    for (const btn of document.querySelectorAll(className)) {
+        btn.addEventListener('click', callbackFunction);
+    }
 }
 
 /**
@@ -98,7 +110,6 @@ document.querySelector('.nav-logo').addEventListener('click', function () {
     document.location.href = '/';
 });
 
-
 // comments sort by selector
 for (const dropdown of document.querySelectorAll(".sort-type-select-wrapper")) {
     dropdown.addEventListener('click', function () {
@@ -127,7 +138,23 @@ for (const option of document.querySelectorAll(".sort-option")) {
 }
 
 // upvote and downvote buttons event listeners
-for (const btn of document.querySelectorAll(".upvote-btn")) {
+addClickListeners(".upvote-btn", function () {
+    const commentID = this.parentNode.parentNode.id;
+    voteComment(true, commentID);
+})
+
+addClickListeners(".downvote-btn", function () {
+    const commentID = this.parentNode.parentNode.id;
+    voteComment(false, commentID);
+})
+
+// event listener for the delete comment button
+addClickListeners(".delete-btn", function () {
+    const commentID = this.parentNode.id;
+    deleteComment(commentID);
+})
+
+/*for (const btn of document.querySelectorAll(".upvote-btn")) {
     btn.addEventListener('click', function () {
         const commentID = this.parentNode.parentNode.id;
         voteComment(true, commentID);
@@ -147,4 +174,4 @@ for (const btn of document.querySelectorAll(".delete-btn")) {
         const commentID = this.parentNode.id;
         deleteComment(commentID);
     })
-}
+}*/
