@@ -18,12 +18,12 @@
  * section's contect, scrolls up by the navbar height.
  * @param  {number} sectionIndex index number of the section
  * @return {function}            callback function for the event
-*/
+ */
 function makeScrollCallBack(sectionIndex) {
-    return function() {
-        var sectionDOM = document.querySelector(sectionIndex)
-        sectionDOM.scrollIntoView(); 
-        
+    return function () {
+        var sectionDOM = document.querySelector(sectionIndex);
+        sectionDOM.scrollIntoView();
+
         var height = document.querySelector('nav').clientHeight;
         var scrolledY = window.scrollY;
         if (scrolledY === sectionDOM.offsetTop) {
@@ -38,20 +38,24 @@ function makeScrollCallBack(sectionIndex) {
  * changes styles for chosen '.project-name' and old '.project-name.active'.
  * @param  {number} projectIndex index number of the project name and its description, respectively
  * @return {function}            callback function for the event
-*/
+ */
 function makeChangeDescriptionCallBack(projectIndex) {
-    return function() {
+    return function () {
         document.querySelector('.project-name.active').classList.remove('active');
         document.querySelector('.projects-names').children[projectIndex].classList.add('active');
-        
+
         document.querySelector('.project-description.active').classList.remove('active');
         document.querySelector('.projects-descriptions').children[projectIndex].classList.add('active');
     }
 }
 
-/* nav buttons */
+// comment button
+document.querySelector('.home-comment-btn').addEventListener('click', function () {
+    document.location.href = '/comments.html';
+});
 
-var sections = ['.home', '.projects', '.cats', '.skills', '.contacts']
+// nav buttons
+var sections = ['.home', '.projects', '.cats', '.skills', '.contacts'];
 
 document.querySelector('.nav-logo').addEventListener('click', makeScrollCallBack('.home-section'));
 
@@ -59,8 +63,7 @@ for (var i = 0; i < sections.length; i++) {
     document.querySelector('.nav-item' + sections[i]).addEventListener('click', makeScrollCallBack(sections[i] + '-section'));
 }
 
-/* projects buttons */
-
+// projects names buttons
 var listOfProjects = document.querySelector('.projects-names').childElementCount;
 
 for (var i = 0; i < listOfProjects; i++) {

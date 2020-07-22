@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>My Portfolio</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/comments.css">
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-logo">
+        <img src="images/logo.svg">
+      </div>
+    </nav>
+    <main>
+      <section class="comment-form-section">
+        <form class="comment-form" action="/comments" method="post">
+          <div class="comment-text-group">
+            <input type="hidden" name="action" value="add"/>
+            <textarea rows="1" id="comment-text" placeholder="Comment" name="comment-text" required></textarea>
+            <label for="comment-text" class="comment-label">Comment</label>
+          </div>
+          <br>
+          <input type="submit" class="comment-submit-btn" value="Leave a comment">
+        </form>
+      </section>
+      <section class="comments-section">
+        <form class="comments-sort-form">
+          <div class="sort-type-select-wrapper">
+            <div class="sort-type-select">
+              <div class="sort-type-select-trigger"><span>Sort by</span>
+                <div class="arrow"></div>
+              </div>
+              <div class="sort-options">
+                <span class="sort-option selected" data-value="date">Date</span>
+                <span class="sort-option" data-value="rating">Rating</span>
+              </div>
+            </div>
+          </div>
+        </form>
+        <ul class="comments-list"></ul>
+      </section>
+    </main>
+    <script src="js/comments.js"></script>
+  </body>
+</html>
