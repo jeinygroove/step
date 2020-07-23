@@ -95,8 +95,7 @@ public class CommentsServlet extends HttpServlet {
         try {
             commentID = Long.parseLong(request.getParameter("comment-id"));
         } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'comment-id' isn't a number");
-            response.sendRedirect(commentsPage);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'comment-id' isn't a number or doesn't exist");
             return;
         }
 
@@ -108,12 +107,13 @@ public class CommentsServlet extends HttpServlet {
                 } else if ("false".equals(isUpvote)) {
                     comments.downvoteComment(commentID);
                 } else {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'isUpvote' isn't boolean");
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'isUpvote' isn't boolean or doesn't exist");
+                    return;
                 }
                 break;
             }
             case "delete": comments.deleteComment(commentID); break;
-            default: response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown value of parameter 'action'"); break;
+            default: response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown value of parameter 'action'"); return;
         }
         response.sendRedirect(commentsPage);
     }
