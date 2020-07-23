@@ -81,6 +81,10 @@ public class CommentsServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final String commentsPage = "/comments.html";
         String action = request.getParameter("action");
+        if (action == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'action' doesn't exist");
+            return;
+        }
 
         // if we want to add comment, then there's no commentID
         if ("add".equals(action)) {
