@@ -95,13 +95,13 @@ public class Comments {
 
     /**
      * Modifies comments in datastore with query and returns first 'n'.
-     * @param query    Query for datastore.
-     * @param n        Number of comments to return.
+     * @param query                   Query for datastore.
+     * @param numberOfComments        Number of comments to return.
      * @return List of pairs (Comment id, Comment object), sorted according to the query.
      */
-    private ArrayList<Map.Entry<Long, Comment>> modifyWithQuery(Query query, int n) {
+    private ArrayList<Map.Entry<Long, Comment>> modifyWithQuery(Query query, int numberOfComments) {
         ArrayList<Map.Entry<Long, Comment>> result = new ArrayList<>();
-        List<Entity> commentEntities = this.datastore.prepare(query).asList(FetchOptions.Builder.withLimit(n));
+        List<Entity> commentEntities = this.datastore.prepare(query).asList(FetchOptions.Builder.withLimit(numberOfComments));
 
         for (Entity entity : commentEntities) {
             long id = entity.getKey().getId();
@@ -123,12 +123,12 @@ public class Comments {
 
     /**
      * Sorts comments from datastore by the date in descending order and return first 'n'.
-     * @param n        Number of comments to return.
+     * @param numberOfComments        Number of comments to return.
      * @return List of pairs (Comment id, Comment object), sorted by the date in descending order.
      */
-    public ArrayList<Map.Entry<Long, Comment>> sortByDate(int n) {
+    public ArrayList<Map.Entry<Long, Comment>> sortByDate(int numberOfComments) {
         Query query = new Query(COMMENT_ENTITY_KIND).addSort(DATE, Query.SortDirection.DESCENDING);
-        return modifyWithQuery(query, n);
+        return modifyWithQuery(query, numberOfComments);
     }
 
     /**

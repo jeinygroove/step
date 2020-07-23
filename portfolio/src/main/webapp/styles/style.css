@@ -34,6 +34,7 @@ nav {
     flex-direction: row;
     width: 100%;
     align-items: center;
+    z-index: 1000;
 }
 
 .nav-logo {

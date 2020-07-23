@@ -19,7 +19,6 @@ import com.google.sps.data.Comments;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -47,26 +46,31 @@ public class CommentsServlet extends HttpServlet {
         response.setContentType("application/json");
         String type = request.getParameter("type");
         String quantity = request.getParameter("quantity");
+        if (type == null || quantity == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missed 'type' or/and 'quantity' parameter");
+            return;
+        }
+
+        int numberOfComments;
         try {
-            if (Comments.DATE.equals(type)) {
-                if ("all".equals(quantity.toLowerCase())) {
-                    response.getWriter().println(gson.toJson(comments.sortByDate()));
-                } else {
-                    int n = Integer.parseInt(quantity);
-                    response.getWriter().println(gson.toJson(comments.sortByDate(n)));
-                }
-            } else if (Comments.RATING.equals(type)) {
-                if ("all".equals(quantity.toLowerCase())) {
-                    response.getWriter().println(gson.toJson(comments.sortByRating()));
-                } else {
-                    int n = Integer.parseInt(quantity);
-                    response.getWriter().println(gson.toJson(comments.sortByRating(n)));
+            numberOfComments = Integer.parseInt(quantity);
+        } catch (NumberFormatException e) {
+            if ("all".equals(quantity.toLowerCase())) {
+                switch (type) {
+                    case Comments.DATE: response.getWriter().println(gson.toJson(comments.sortByDate())); break;
+                    case Comments.RATING: response.getWriter().println(gson.toJson(comments.sortByRating())); break;
+                    default: response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown value of 'type', it must be 'date' or 'rating'");
                 }
             } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'quantity' isn't a number and isn't equal to 'all'");
             }
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        switch (type) {
+            case Comments.DATE: response.getWriter().println(gson.toJson(comments.sortByDate(numberOfComments))); break;
+            case Comments.RATING: response.getWriter().println(gson.toJson(comments.sortByRating(numberOfComments))); break;
+            default: response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown value of 'type', it must be 'date' or 'rating'");
         }
     }
 
@@ -75,37 +79,42 @@ public class CommentsServlet extends HttpServlet {
      */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final String commentsPage = "/comments.html";
         String action = request.getParameter("action");
-        try {
-            switch (action) {
-                case "add":
-                    String text = request.getParameter(Comments.TEXT);
-                    comments.addComment(text);
-                    break;
-                case "vote": {
-                    String isUpvote = request.getParameter("isUpvote");
-                    long commentID = Long.parseLong(request.getParameter("comment-id"));
-                    if ("true".equals(isUpvote)) {
-                        comments.upvoteComment(commentID);
-                    } else if ("false".equals(isUpvote)) {
-                        comments.downvoteComment(commentID);
-                    } else {
-                        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                    }
-                    break;
-                }
-                case "delete": {
-                    long commentID = Long.parseLong(request.getParameter("comment-id"));
-                    comments.deleteComment(commentID);
-                    break;
-                }
-                default:
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-                    break;
-            }
-        } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+
+        // if we want to add comment, then there's no commentID
+        if ("add".equals(action)) {
+            String text = request.getParameter(Comments.TEXT);
+            comments.addComment(text);
+            response.sendRedirect(commentsPage);
+            return;
         }
-        response.sendRedirect("/comments.html");
+
+        // if we want to do smth else with comments, then we also need commentID
+        long commentID;
+        try {
+            commentID = Long.parseLong(request.getParameter("comment-id"));
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'comment-id' isn't a number");
+            response.sendRedirect(commentsPage);
+            return;
+        }
+
+        switch (action) {
+            case "vote": {
+                String isUpvote = request.getParameter("isUpvote");
+                if ("true".equals(isUpvote)) {
+                    comments.upvoteComment(commentID);
+                } else if ("false".equals(isUpvote)) {
+                    comments.downvoteComment(commentID);
+                } else {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'isUpvote' isn't boolean");
+                }
+                break;
+            }
+            case "delete": comments.deleteComment(commentID); break;
+            default: response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown value of parameter 'action'"); break;
+        }
+        response.sendRedirect(commentsPage);
     }
 }

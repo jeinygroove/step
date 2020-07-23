@@ -71,11 +71,8 @@ function deleteComment(commentID) {
     });
 }
 
-if (selectedSortType !== 'date' && selectedSortType !== 'rating')
-    selectedSortType = 'date';
-
-if (selectedQuantityOfComments === null || selectedQuantityOfComments === undefined)
-    selectedQuantityOfComments = 'all';
+if (selectedSortType == null) selectedSortType = 'date';
+if (selectedQuantityOfComments == null) selectedQuantityOfComments = 'all';
 
 getComments(selectedSortType, selectedQuantityOfComments);
 
