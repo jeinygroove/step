@@ -94,7 +94,7 @@ public class Comments {
     }
 
     /**
-     * Modifies comments in datastore with query and returns first 'n'.
+     * Modifies comments in datastore with query and returns first 'numberOfComments'.
      * @param query                   Query for datastore.
      * @param numberOfComments        Number of comments to return.
      * @return List of pairs (Comment id, Comment object), sorted according to the query.
@@ -122,7 +122,7 @@ public class Comments {
     }
 
     /**
-     * Sorts comments from datastore by the date in descending order and return first 'n'.
+     * Sorts comments from datastore by the date in descending order and return first 'numberOfComments'.
      * @param numberOfComments        Number of comments to return.
      * @return List of pairs (Comment id, Comment object), sorted by the date in descending order.
      */
