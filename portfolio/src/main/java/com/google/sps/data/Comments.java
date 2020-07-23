@@ -141,12 +141,12 @@ public class Comments {
 
     /**
      * Sorts comments from datastore by the rating in descending order and return first 'n'.
-     * @param n        Number of comments to return.
+     * @param numberOfComments        Number of comments to return.
      * @return List of pairs (Comment id, Comment object), sorted by the rating in descending order.
      */
-    public ArrayList<Map.Entry<Long, Comment>> sortByRating(int n) {
+    public ArrayList<Map.Entry<Long, Comment>> sortByRating(int numberOfComments) {
         Query query = new Query(COMMENT_ENTITY_KIND).addSort(RATING, Query.SortDirection.DESCENDING);
-        return modifyWithQuery(query, n);
+        return modifyWithQuery(query, numberOfComments);
     }
 
     /**
