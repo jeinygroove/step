@@ -152,6 +152,15 @@
     font-size: 18px;
 }
 
+/* shawarma section */
+.shawarma-section {
+    background: white;
+}
+
+#map {
+    height: calc(100vh - 60px);
+}
+
 /* footer contacts */
 .contacts-section {
     background-color: #22C9E0;
