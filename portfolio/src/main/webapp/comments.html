@@ -1,8 +1,3 @@
-<%@ page import="com.google.appengine.api.blobstore.BlobstoreService" %>
-<%@ page import="com.google.appengine.api.blobstore.BlobstoreServiceFactory" %>
-<% BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-String uploadUrl = blobstoreService.createUploadUrl("/comments"); %>
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -20,7 +15,7 @@ String uploadUrl = blobstoreService.createUploadUrl("/comments"); %>
     </nav>
     <main>
       <section class="comment-form-section">
-        <form class="comment-form" method="post" enctype="multipart/form-data" action="<%= uploadUrl %>">
+        <form class="comment-form" method="post" enctype="multipart/form-data" >
           <div class="comment-text-group">
             <input type="hidden" name="action" value="add"/>
             <textarea rows="1" id="comment-text" placeholder="Comment" name="comment-text" required></textarea>

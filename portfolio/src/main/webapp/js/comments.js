@@ -134,6 +134,13 @@ function toggleSelectedClass(option, className) {
     option.closest('.select').querySelector('.select-trigger span').textContent = option.textContent;
 }
 
+// add blobstore url
+fetch("/blobstore-upload-url", {method: 'GET'}).then(response => response.text()).then(url => {
+    const commentFormDOM = document.querySelector('.comment-form');
+    commentFormDOM.action = url;
+});
+
+
 // add event listener to the logo
 document.querySelector('.nav-logo').addEventListener('click', function () {
     document.location.href = '/';
