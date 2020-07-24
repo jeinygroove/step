@@ -89,11 +89,6 @@ public class CommentsServlet extends HttpServlet {
         // if we want to add comment, then there's no commentID
         if ("add".equals(action)) {
             String text = request.getParameter(Comments.TEXT);
-            if (text == null) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'text' doesn't exist, required for action 'add'");
-                return;
-            }
-
             comments.addComment(text);
             response.sendRedirect(commentsPage);
             return;
