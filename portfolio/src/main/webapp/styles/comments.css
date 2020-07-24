@@ -265,7 +265,7 @@ main {
 
 .comment-content {
     position: relative;
-    flex-grow: 1;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -277,13 +277,11 @@ main {
     margin-top: 20px;
     margin-bottom: 50px;
     width: 100%;
-    justify-content: start;
-    word-break: break-all;
 }
 
 .comment-date {
     position: absolute;
-    width: auto;
+    width: 100%;
     text-align: end;
     bottom: 0;
     margin-top: 0;
