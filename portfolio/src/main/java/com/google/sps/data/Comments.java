@@ -13,6 +13,7 @@ public class Comments {
     public static final String DATE = "date";
     public static final String RATING = "rating";
     public static final String TEXT = "comment-text";
+    public static final String IMAGE_URL = "comment-image";
 
     /**
      * Represents the comment.
@@ -21,16 +22,19 @@ public class Comments {
         Date date;
         String text;
         long rating;
+        String imageURL;
 
         /** Creates the comment with specified fields.
          * @param date      The date of sending a comment.
          * @param text      The comment's text.
          * @param rating    The comment's rating.
+         * @param imageURL  Url to the comments image, if exist.
          */
-        public Comment(Date date, String text, long rating) {
+        public Comment(Date date, String text, long rating, String imageURL) {
             this.date = date;
             this.text = text;
             this.rating = rating;
+            this.imageURL = imageURL;
         }
     }
 
@@ -43,13 +47,14 @@ public class Comments {
     /**
      * Creates the comment with the specified text and puts it to the datastore.
      * @param text      The comment's text.
+     * @param imageURL  Url to the comments image, if exist.
      */
-    public void addComment(String text) {
+    public void addComment(String text, String imageURL) {
         Entity commentEntity = new Entity(COMMENT_ENTITY_KIND);
         commentEntity.setProperty(DATE, new Date());
         commentEntity.setProperty(TEXT, text);
         commentEntity.setProperty(RATING, 0);
-
+        commentEntity.setProperty(IMAGE_URL, imageURL);
         datastore.put(commentEntity);
     }
 
@@ -62,7 +67,8 @@ public class Comments {
         Date date = (Date) entity.getProperty(DATE);
         String text = (String) entity.getProperty(TEXT);
         long rating = (long) entity.getProperty(RATING);
-        return new Comment(date, text, rating);
+        String imageURL = (String) entity.getProperty(IMAGE_URL);
+        return new Comment(date, text, rating, imageURL);
     }
 
     /**

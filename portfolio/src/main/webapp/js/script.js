@@ -51,7 +51,7 @@ function makeChangeDescriptionCallBack(projectIndex) {
 
 // comment button
 document.querySelector('.home-comment-btn').addEventListener('click', function () {
-    document.location.href = '/comments.html';
+    document.location.href = '/comments.jsp';
 });
 
 // nav buttons

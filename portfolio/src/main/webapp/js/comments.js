@@ -21,7 +21,7 @@ function getComments(type, quantity) {
         for (var i = 0; i < comments.length; i++) {
             const comment = comments[i];
             listOfCommentsDOM.appendChild(
-                createListElement(comment.value.text, comment.value.rating, comment.value.date, comment.key));
+                createListElement(comment.value.text, comment.value.rating, comment.value.date, comment.value.imageURL, comment.key));
         }
     });
 }
@@ -80,9 +80,10 @@ getComments(selectedSortType, selectedQuantityOfComments);
  * @param  {String} text       comment text
  * @param  {number} rating     rating of the comment
  * @param  {String} date       date of the comment publication
+ * @param  {String} imageURL   imageURL of attached image, if exist
  * @param  {String} commentID  comment id
  */
-function createListElement(text, rating, date, commentID) {
+function createListElement(text, rating, date, imageURL, commentID) {
     const liElement = document.createElement('li');
     liElement.classList.add('comment');
     liElement.id = commentID;
@@ -97,6 +98,19 @@ function createListElement(text, rating, date, commentID) {
             <p class="comment-text">` + text + `</p>
             <p class="comment-date">` + date + `</p>
         </div>`;
+
+    if (imageURL != null) {
+        const commentContext = liElement.querySelector('.comment-content');
+        commentContext.insertBefore(function() {
+            const divElement = document.createElement('div');
+            divElement.classList.add('comment-image-wrapper');
+            const imgElement = document.createElement('img');
+            imgElement.classList.add('comment-image');
+            imgElement.src = imageURL;
+            divElement.appendChild(imgElement);
+            return divElement;
+        }(), commentContext.firstElementChild.nextSibling);
+    }
 
     // add event listeners for delete and vote buttons
     liElement.querySelector('.delete-btn').addEventListener('click', function() {
