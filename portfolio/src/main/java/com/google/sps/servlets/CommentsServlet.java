@@ -160,11 +160,6 @@ public class CommentsServlet extends HttpServlet {
         ImagesService imagesService = ImagesServiceFactory.getImagesService();
         ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
 
-        try {
-            URL url = new URL(imagesService.getServingUrl(options));
-            return url.getPath();
-        } catch (MalformedURLException e) {
-            return imagesService.getServingUrl(options);
-        }
+        return imagesService.getServingUrl(options);
     }
 }
