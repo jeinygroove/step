@@ -152,6 +152,25 @@
     font-size: 18px;
 }
 
+/* charts section */
+.charts-section {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.charts-intro {
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.charts-divs {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
 /* footer contacts */
 .contacts-section {
     background-color: #22C9E0;

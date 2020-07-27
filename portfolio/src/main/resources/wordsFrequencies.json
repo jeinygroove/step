@@ -1,0 +1,48 @@
+[
+  {"musician": "Pink Floyd",
+  "albumTitle": "The Dark Side of the Moon",
+  "words": [
+    {"money": 6},
+    {"time": 6},
+    {"good": 5},
+    {"dark": 5},
+    {"home": 5},
+    {"lunatic": 5},
+    {"moon": 4}
+  ]},
+  {"musician": "The Beatles",
+    "albumTitle": "Abbey Road",
+    "words": [
+      {"sun": 26},
+      {"darling": 13},
+      {"bang": 12},
+      {"weight": 8},
+      {"love": 8},
+      {"silver": 7},
+      {"octopus'": 7}
+    ]},
+  {"musician": "Skillet",
+    "albumTitle": "Victorious",
+    "words": [
+      {"rise": 54},
+      {"light": 29},
+      {"ready": 27},
+      {"kingdom": 21},
+      {"victorious": 12},
+      {"legendary": 10},
+      {"freedom": 8},
+      {"heroes": 6}
+    ]},
+  {"musician": "Arcade Fire",
+    "albumTitle": "The Suburbs",
+    "words": [
+      {"wait": 27},
+      {"again": 25},
+      {"modern": 18},
+      {"rococo": 15},
+      {"kids": 14},
+      {"start": 13},
+      {"city": 7},
+      {"suburbs'": 6}
+    ]}
+]

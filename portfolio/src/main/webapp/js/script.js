@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// google charts load
+google.charts.load('current', {'packages':['corechart']});
+
 /**
  * Return function, which moves to the section with index 'sectionIndex' and,
  * if the navbar ('nav') will hide part of the
@@ -49,13 +52,41 @@ function makeChangeDescriptionCallBack(projectIndex) {
     }
 }
 
+/**
+ * Draws charts for words frequences.
+ */
+function drawCharts() {
+    fetch('/words', {method: 'GET'}).then(response => response.json()).then((wordsArray) => {
+        const chartsDOM = document.querySelector('.charts-divs');
+        var index = 0;
+        wordsArray.forEach(album => {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Words');
+            data.addColumn('number', 'Number of appearances');
+            data.addRows(Object.keys(album.words).map( word => [Object.keys(album.words[word])[0], Object.values(album.words[word])[0]]));
+
+            var options = {'title': album.musician + ' - \"' + album.albumTitle + '\"',
+                           'width': 400,
+                           'height': 300};
+
+            const divElement = document.createElement('div');
+            divElement.id = 'chart-' + index;
+            chartsDOM.appendChild(divElement);
+            var chart = new google.visualization.PieChart(divElement);
+            chart.draw(data, options);
+
+            index++;
+        })
+    })
+}
+
 // comment button
 document.querySelector('.home-comment-btn').addEventListener('click', function () {
     document.location.href = '/comments.html';
 });
 
 // nav buttons
-var sections = ['.home', '.projects', '.cats', '.skills', '.contacts'];
+var sections = ['.home', '.projects', '.cats', '.skills', '.charts', '.contacts'];
 
 document.querySelector('.nav-logo').addEventListener('click', makeScrollCallBack('.home-section'));
 
@@ -70,3 +101,6 @@ for (var i = 0; i < listOfProjects; i++) {
     // After clicking on '.project-name' change the visible '.project-description'
     document.querySelector('.projects-names').children[i].addEventListener('click', makeChangeDescriptionCallBack(i));
 }
+
+// charts section
+google.charts.setOnLoadCallback(drawCharts);
