@@ -91,11 +91,10 @@ public class CommentsServlet extends HttpServlet {
             String text = request.getParameter(Comments.TEXT);
             if (text == null) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'text' doesn't exist, required for action 'add'");
-                return;
+            } else {
+                comments.addComment(text);
+                response.sendRedirect(commentsPage);
             }
-
-            comments.addComment(text);
-            response.sendRedirect(commentsPage);
             return;
         }
 
