@@ -1,36 +1,32 @@
 package com.google.sps.servlets;
 
 import com.google.gson.Gson;
-
-import javax.servlet.ServletException;
+import com.google.sps.data.ShawarmaPlace;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Servlet that returns list of shawarma places.
  */
 @WebServlet("/shawarma")
 public class ShawarmaServlet extends HttpServlet {
+    private final String SHAWARMA_FILE = "shawarma.json";
+    private final Gson gson = new Gson();
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
-        try {
-            InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("shawarma.json");
-            Scanner scanner = new Scanner(inputStream);
-            StringBuffer stringBuffer = new StringBuffer();
-            while (scanner.hasNext()) {
-                stringBuffer.append(scanner.nextLine());
-            }
-            response.getWriter().println(stringBuffer.toString());
-        } catch(Exception e) {
+        try (final Reader reader = Files.newBufferedReader(Paths.get(
+                        Thread.currentThread().getContextClassLoader().getResource(SHAWARMA_FILE).toURI()))) {
+            ShawarmaPlace[] shawarmaPlaces = gson.fromJson(reader, ShawarmaPlace[].class);
+            response.getWriter().println(gson.toJson(shawarmaPlaces));
+        } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }

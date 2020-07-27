@@ -81,10 +81,10 @@ function initMap() {
     center: { lat: stPetersburgCenter.latitude, lng: stPetersburgCenter.longitude },
     zoom: 13
   });
-}
 
-// Initialize map markers.
-putShawarmaMarkers();
+  // Initialize map markers.
+  putShawarmaMarkers();
+}
 
 // comment button
 document.querySelector('.home-comment-btn').addEventListener('click', function () {
