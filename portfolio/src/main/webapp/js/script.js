@@ -80,13 +80,29 @@ function drawCharts() {
     })
 }
 
+/**
+ * Initialize map.
+ */
+var map;
+const stPetersburgCenter = {
+    latitude: 59.944186,
+    longitude: 30.306510
+}
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: stPetersburgCenter.latitude, lng: stPetersburgCenter.longitude },
+    zoom: 13
+  });
+}
+
 // comment button
 document.querySelector('.home-comment-btn').addEventListener('click', function () {
     document.location.href = '/comments.html';
 });
 
 // nav buttons
-var sections = ['.home', '.projects', '.cats', '.skills', '.charts', '.contacts'];
+var sections = ['.home', '.projects', '.cats', '.skills', '.shawarma', '.charts', '.contacts'];
 
 document.querySelector('.nav-logo').addEventListener('click', makeScrollCallBack('.home-section'));
 
