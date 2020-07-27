@@ -53,7 +53,7 @@ function makeChangeDescriptionCallBack(projectIndex) {
 }
 
 /**
- * Draws charts for words frequences.
+ * Draws charts for words frequencies.
  */
 function drawCharts() {
     fetch('/words', {method: 'GET'}).then(response => response.json()).then((wordsArray) => {
@@ -63,7 +63,7 @@ function drawCharts() {
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Words');
             data.addColumn('number', 'Number of appearances');
-            data.addRows(Object.keys(album.words).map( word => [Object.keys(album.words[word])[0], Object.values(album.words[word])[0]]));
+            data.addRows(Object.entries(album.words).map(([_, wordObj]) => [wordObj.word, wordObj.frequency]));
 
             var options = {'title': album.musician + ' - \"' + album.albumTitle + '\"',
                            'width': 400,

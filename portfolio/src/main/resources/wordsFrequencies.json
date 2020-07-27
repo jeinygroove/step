@@ -2,47 +2,47 @@
   {"musician": "Pink Floyd",
   "albumTitle": "The Dark Side of the Moon",
   "words": [
-    {"money": 6},
-    {"time": 6},
-    {"good": 5},
-    {"dark": 5},
-    {"home": 5},
-    {"lunatic": 5},
-    {"moon": 4}
+    {"word": "money", "frequency": 6},
+    {"word": "time", "frequency": 6},
+    {"word": "good", "frequency": 5},
+    {"word": "dark", "frequency": 5},
+    {"word": "home", "frequency": 5},
+    {"word": "lunatic", "frequency": 5},
+    {"word": "moon", "frequency": 4}
   ]},
   {"musician": "The Beatles",
     "albumTitle": "Abbey Road",
     "words": [
-      {"sun": 26},
-      {"darling": 13},
-      {"bang": 12},
-      {"weight": 8},
-      {"love": 8},
-      {"silver": 7},
-      {"octopus'": 7}
+      {"word": "sun", "frequency": 26},
+      {"word": "darling", "frequency": 13},
+      {"word": "bang", "frequency": 12},
+      {"word": "weight", "frequency": 8},
+      {"word": "love", "frequency": 8},
+      {"word": "silver", "frequency": 7},
+      {"word": "octopus'", "frequency": 7}
     ]},
   {"musician": "Skillet",
     "albumTitle": "Victorious",
     "words": [
-      {"rise": 54},
-      {"light": 29},
-      {"ready": 27},
-      {"kingdom": 21},
-      {"victorious": 12},
-      {"legendary": 10},
-      {"freedom": 8},
-      {"heroes": 6}
+      {"word": "rise", "frequency": 54},
+      {"word": "light", "frequency": 29},
+      {"word": "ready", "frequency": 27},
+      {"word": "kingdom", "frequency": 21},
+      {"word": "victorious", "frequency": 12},
+      {"word": "legendary", "frequency": 10},
+      {"word": "freedom", "frequency": 8},
+      {"word": "heroes", "frequency": 6}
     ]},
   {"musician": "Arcade Fire",
     "albumTitle": "The Suburbs",
     "words": [
-      {"wait": 27},
-      {"again": 25},
-      {"modern": 18},
-      {"rococo": 15},
-      {"kids": 14},
-      {"start": 13},
-      {"city": 7},
-      {"suburbs'": 6}
+      {"word": "wait", "frequency": 27},
+      {"word": "again", "frequency": 25},
+      {"word": "modern", "frequency": 18},
+      {"word": "rococo", "frequency": 15},
+      {"word": "kids", "frequency": 14},
+      {"word": "start", "frequency": 13},
+      {"word": "city", "frequency": 7},
+      {"word": "suburbs'", "frequency": 6}
     ]}
 ]
