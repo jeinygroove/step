@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 @WebServlet("/shawarma")
 public class ShawarmaServlet extends HttpServlet {
     private final String SHAWARMA_FILE = "shawarma.json";
-    private final Path PATH_SHAWARMA_FILE = Paths.get("WEB-INF/classes", SHAWARMA_FILE).toAbsolutePath();
+    private final Path PATH_SHAWARMA_FILE = Paths.get("WEB-INF", "classes", SHAWARMA_FILE).toAbsolutePath();
     private final Gson gson = new Gson();
 
     @Override
@@ -28,10 +28,9 @@ public class ShawarmaServlet extends HttpServlet {
         response.setContentType("application/json");
 
         try (final Reader reader = Files.newBufferedReader(PATH_SHAWARMA_FILE)) {
-            System.out.println(Paths.get(SHAWARMA_FILE));
             ShawarmaPlace[] shawarmaPlaces = gson.fromJson(reader, ShawarmaPlace[].class);
             response.getWriter().println(gson.toJson(shawarmaPlaces));
-        } catch (JsonIOException | JsonSyntaxException e2){
+        } catch (JsonIOException | JsonSyntaxException jsonException){
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                     "Json file with shawarma places is invalid");
         } catch (Exception e) {
