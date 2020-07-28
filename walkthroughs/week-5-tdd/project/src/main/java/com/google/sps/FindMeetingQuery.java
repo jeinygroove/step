@@ -22,19 +22,19 @@ public final class FindMeetingQuery {
    * Returns collection of time slots, in which we can appoint the meeting.
    * @param events   All events in the day.
    * @param request  Information about event that we want to add (attendees, required duration).
-   * */
+   */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    // hash map, where key is the time moment and object is the number of attendees from the request,
-    // who will be busy or free from that time moment
-    HashMap<Integer, Long> timePoints = new HashMap<>();
+    // hash map, where key is the moment of time and object is
+    // the change in the number of available attendees at that particular time
+    HashMap<Integer, Long> timePointsOfAvailabilityChange = new HashMap<>();
     Collection<String> attendees = request.getAttendees();
 
-    long requiredAmount = attendees.size();
+    long numberOfAttendeesRequired = attendees.size();
     long requiredDuration = request.getDuration();
 
     // add start and end times of the day
-    timePoints.put(0, requiredAmount);
-    timePoints.put(TimeRange.WHOLE_DAY.end(), -requiredAmount);
+    timePointsOfAvailabilityChange.put(0, numberOfAttendeesRequired);
+    timePointsOfAvailabilityChange.put(TimeRange.WHOLE_DAY.end(), -numberOfAttendeesRequired);
 
     // add all time point, where the number of free attendees is changing
     for (Event event : events) {
@@ -48,24 +48,27 @@ public final class FindMeetingQuery {
         int startTime = event.getWhen().start();
         int endTime = event.getWhen().end();
 
-        timePoints.put(startTime, timePoints.getOrDefault(startTime, 0L) - eventAttendees.size());
-        timePoints.put(endTime, timePoints.getOrDefault(endTime, 0L) + eventAttendees.size());
+        timePointsOfAvailabilityChange.put(startTime,
+                timePointsOfAvailabilityChange.getOrDefault(startTime, 0L) - eventAttendees.size());
+        timePointsOfAvailabilityChange.put(endTime,
+                timePointsOfAvailabilityChange.getOrDefault(endTime, 0L) + eventAttendees.size());
       }
     }
 
-    List<Integer> sortedTimes = new ArrayList<>(timePoints.keySet());
+    List<Integer> sortedTimes = new ArrayList<>(timePointsOfAvailabilityChange.keySet());
     Collections.sort(sortedTimes);
 
-    long currentAmount = 0;
+    long numberOfAttendeesCurrentlyAvailable = 0;
     int previousTime = 0;
     Collection<TimeRange> timeSlots = new ArrayList<>();
 
     // find time slots with the help of scan line method
     for (int currentTime : sortedTimes) {
-      if (currentAmount == requiredAmount && (currentTime - previousTime) >= requiredDuration) {
+      if (numberOfAttendeesCurrentlyAvailable == numberOfAttendeesRequired
+              && (currentTime - previousTime) >= requiredDuration) {
         timeSlots.add(TimeRange.fromStartEnd(previousTime, currentTime, false));
       }
-      currentAmount += timePoints.get(currentTime);
+      numberOfAttendeesCurrentlyAvailable += timePointsOfAvailabilityChange.get(currentTime);
       previousTime = currentTime;
     }
 
