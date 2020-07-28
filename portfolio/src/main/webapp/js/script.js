@@ -50,46 +50,19 @@ function makeChangeDescriptionCallBack(projectIndex) {
 }
 
 /**
- * Puts shawarma markers and adds event listeners to show description.
+ * Initialize map.
  */
-function putShawarmaMarkers() {
-    fetch('/shawarma', {method: 'GET'}).then(response => response.json()).then((shawarmaPlaces) => {
-        shawarmaPlaces.forEach(shawarmaPlace => {
-            const shawarmaMarker = new google.maps.Marker({
-                position: {
-                    lat: shawarmaPlace.latitude,
-                    lng: shawarmaPlace.longitude
-                },
-                map: map,
-                title: shawarmaPlace.name
-            });
-
-            const shawarmaContent = `
-            <h1>` + shawarmaPlace.name + `</h1>
-            <p>` + shawarmaPlace.description + `</p>`;
-            const infoWindow = new google.maps.InfoWindow({content: shawarmaContent});
-            shawarmaMarker.addListener('click', () => {
-                infoWindow.open(map, shawarmaMarker);
-            });
-        });
-    });
-}
-
-// Initialize map.
 var map;
 const stPetersburgCenter = {
     latitude: 59.944186,
     longitude: 30.306510
-};
+}
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
     center: { lat: stPetersburgCenter.latitude, lng: stPetersburgCenter.longitude },
     zoom: 13
   });
-
-  // Initialize map markers.
-  putShawarmaMarkers();
 }
 
 // comment button
