@@ -15,17 +15,24 @@
 package com.google.sps;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class FindMeetingQuery {
 
   /**
-   * Returns collection of time slots, in which we can appoint the meeting.
+   * Returns collection of time slots, in which we can book the meeting.
    * @param events   All events in the day.
    * @param request  Information about event that we want to add (attendees, required duration).
    */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    // hash map, where key is the moment of time and object is
-    // the change in the number of available attendees at that particular time
+    // hash map, where key is the moment of time and value is
+    // the change in the number of available attendees at that particular time.
+    // For example: A is the mandatory attendee.
+    // Events    : ___|--A--|__
+    // TimePoints: 0  1     2 3
+    // Hash map looks like {0=1=0, 1=-1=0, 2=1=0, 3=-1=0}.
+    // +1 for 0 and 2, because A starts the day without a meeting/finishes the meeting
+    // -1 for 1 and 3, because it's the end of the day/A goes to the meeting
     HashMap<Integer, Long> timePointsOfAvailabilityChange = new HashMap<>();
     Collection<String> attendees = request.getAttendees();
 
@@ -40,23 +47,24 @@ public final class FindMeetingQuery {
     for (Event event : events) {
       // the event can have attendees that are not present in the request,
       // so we shouldn't count them
-      Collection<String> eventAttendees = new ArrayList<>(event.getAttendees());
-      eventAttendees.retainAll(attendees);
+      Collection<String> attendeesOfExistingEvent = new ArrayList<>(event.getAttendees());
+      attendeesOfExistingEvent.retainAll(attendees);
 
       // if intersection isn't empty
-      if (!eventAttendees.isEmpty()) {
+      if (!attendeesOfExistingEvent.isEmpty()) {
+        int numAttendeesOfExistingEvent = attendeesOfExistingEvent.size();
         int startTime = event.getWhen().start();
         int endTime = event.getWhen().end();
 
         timePointsOfAvailabilityChange.put(startTime,
-                timePointsOfAvailabilityChange.getOrDefault(startTime, 0L) - eventAttendees.size());
+                timePointsOfAvailabilityChange.getOrDefault(startTime, 0L) - numAttendeesOfExistingEvent);
         timePointsOfAvailabilityChange.put(endTime,
-                timePointsOfAvailabilityChange.getOrDefault(endTime, 0L) + eventAttendees.size());
+                timePointsOfAvailabilityChange.getOrDefault(endTime, 0L) + numAttendeesOfExistingEvent);
       }
     }
 
-    List<Integer> sortedTimes = new ArrayList<>(timePointsOfAvailabilityChange.keySet());
-    Collections.sort(sortedTimes);
+    List<Integer> sortedTimes =
+            timePointsOfAvailabilityChange.keySet().stream().sorted().collect(Collectors.toList());
 
     long numberOfAttendeesCurrentlyAvailable = 0;
     int previousTime = 0;
