@@ -55,8 +55,14 @@ function makeChangeDescriptionCallBack(projectIndex) {
 function putShawarmaMarkers() {
     fetch('/shawarma', {method: 'GET'}).then(response => response.json()).then((shawarmaPlaces) => {
         shawarmaPlaces.forEach(shawarmaPlace => {
-            const shawarmaMarker = new google.maps.Marker(
-            {position: {lat: shawarmaPlace.latitude, lng: shawarmaPlace.longitude}, map: map, title: shawarmaPlace.name});
+            const shawarmaMarker = new google.maps.Marker({
+                position: {
+                    lat: shawarmaPlace.latitude,
+                    lng: shawarmaPlace.longitude
+                },
+                map: map,
+                title: shawarmaPlace.name
+            });
 
             const shawarmaContent = `
             <h1>` + shawarmaPlace.name + `</h1>
