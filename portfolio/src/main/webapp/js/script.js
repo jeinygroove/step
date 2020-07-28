@@ -63,7 +63,8 @@ function drawCharts() {
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Words');
             data.addColumn('number', 'Number of appearances');
-            data.addRows(Object.entries(album.words).map(([_, wordObj]) => [wordObj.word, wordObj.frequency]));
+            data.addRows(Object.entries(album.words).map(
+                ([_, wordObj]) => [wordObj.word, wordObj.frequency]));
 
             var options = {'title': album.musician + ' - \"' + album.albumTitle + '\"',
                            'width': 400,
