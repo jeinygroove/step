@@ -128,7 +128,7 @@ document.querySelector('.nav-logo').addEventListener('click', function () {
 // comments selectors
 addClickListeners(".select-wrapper", function () {
     this.querySelector('.select').classList.toggle('open');
-})
+});
 
 // sort options
 for (const option of document.querySelectorAll(".sort-option")) {
@@ -145,7 +145,7 @@ addClickListeners(".sort-option", function () {
     selectedSortType = type;
     localStorage.setItem(sortItemName, selectedSortType);
     getComments(selectedSortType, selectedQuantityOfComments);
-})
+});
 
 // quantity options
 for (const option of document.querySelectorAll(".quantity-option")) {
@@ -162,21 +162,21 @@ addClickListeners(".quantity-option", function () {
     selectedQuantityOfComments = quantity;
     localStorage.setItem(quantityItemName, selectedQuantityOfComments);
     getComments(selectedSortType, selectedQuantityOfComments);
-})
+});
 
 // upvote and downvote buttons event listeners
 addClickListeners(".upvote-btn", function () {
     const commentID = this.parentNode.parentNode.id;
     voteComment(true, commentID);
-})
+});
 
 addClickListeners(".downvote-btn", function () {
     const commentID = this.parentNode.parentNode.id;
     voteComment(false, commentID);
-})
+});
 
 // event listener for the delete comment button
 addClickListeners(".delete-btn", function () {
     const commentID = this.parentNode.id;
     deleteComment(commentID);
-})
+});
