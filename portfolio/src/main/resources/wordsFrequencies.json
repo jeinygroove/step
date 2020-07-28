@@ -1,0 +1,48 @@
+[
+  {"musician": "Pink Floyd",
+  "albumTitle": "The Dark Side of the Moon",
+  "words": [
+    {"word": "money", "frequency": 6},
+    {"word": "time", "frequency": 6},
+    {"word": "good", "frequency": 5},
+    {"word": "dark", "frequency": 5},
+    {"word": "home", "frequency": 5},
+    {"word": "lunatic", "frequency": 5},
+    {"word": "moon", "frequency": 4}
+  ]},
+  {"musician": "The Beatles",
+    "albumTitle": "Abbey Road",
+    "words": [
+      {"word": "sun", "frequency": 26},
+      {"word": "darling", "frequency": 13},
+      {"word": "bang", "frequency": 12},
+      {"word": "weight", "frequency": 8},
+      {"word": "love", "frequency": 8},
+      {"word": "silver", "frequency": 7},
+      {"word": "octopus'", "frequency": 7}
+    ]},
+  {"musician": "Skillet",
+    "albumTitle": "Victorious",
+    "words": [
+      {"word": "rise", "frequency": 54},
+      {"word": "light", "frequency": 29},
+      {"word": "ready", "frequency": 27},
+      {"word": "kingdom", "frequency": 21},
+      {"word": "victorious", "frequency": 12},
+      {"word": "legendary", "frequency": 10},
+      {"word": "freedom", "frequency": 8},
+      {"word": "heroes", "frequency": 6}
+    ]},
+  {"musician": "Arcade Fire",
+    "albumTitle": "The Suburbs",
+    "words": [
+      {"word": "wait", "frequency": 27},
+      {"word": "again", "frequency": 25},
+      {"word": "modern", "frequency": 18},
+      {"word": "rococo", "frequency": 15},
+      {"word": "kids", "frequency": 14},
+      {"word": "start", "frequency": 13},
+      {"word": "city", "frequency": 7},
+      {"word": "suburbs'", "frequency": 6}
+    ]}
+]
