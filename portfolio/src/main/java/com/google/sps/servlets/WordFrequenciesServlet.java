@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 @WebServlet("/words")
 public class WordFrequenciesServlet extends HttpServlet {
     private final String WORDS_FREQUENCIES_FILE = "wordsFrequencies.json";
-    private final Path PATH_WORDS_FREQUENCIES_FILE = Paths.get("WEB-INF/classes", WORDS_FREQUENCIES_FILE).toAbsolutePath();
+    private final Path PATH_WORDS_FREQUENCIES_FILE = Paths.get("WEB-INF", "classes", WORDS_FREQUENCIES_FILE).toAbsolutePath();
     private final Gson gson = new Gson();
 
     @Override
