@@ -44,7 +44,6 @@ public class CommentsServletGetTest extends ServletTest {
         writer.flush();
         String result = stringWriter.toString();
 
-        System.out.println(result);
         List<Map.Entry<Long, Comments.Comment>> expected =
                 Arrays.asList(new AbstractMap.SimpleEntry(
                         commentEntity.getKey().getId(),
