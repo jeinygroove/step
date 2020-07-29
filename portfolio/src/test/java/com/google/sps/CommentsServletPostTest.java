@@ -186,6 +186,4 @@ public class CommentsServletPostTest extends ServletTest {
                 HttpServletResponse.SC_BAD_REQUEST,
                 "Parameter 'isUpvote' isn't boolean or doesn't exist");
     }
-
-
 }
