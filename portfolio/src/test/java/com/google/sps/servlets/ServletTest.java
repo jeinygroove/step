@@ -1,19 +1,12 @@
-package com.google.sps;
+package com.google.sps.servlets;
 
-import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +14,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+/**
+ * Setups the environment and gives a configuration for
+ * request, response, writer and stringWriter, which
+ * can be necessary in the testing of servlets.
+ * @author Olga Shimanskaia <olgashimanskaia@gmail.com>
+ */
 public class ServletTest {
 
     protected final LocalServiceTestHelper helper =
@@ -45,24 +44,5 @@ public class ServletTest {
     @After
     public void tearDown() {
         helper.tearDown();
-    }
-
-    // Run this test twice to prove we're not leaking any state across tests.
-    private void doTest() {
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        assertEquals(0, ds.prepare(new Query("yam")).countEntities(withLimit(10)));
-        ds.put(new Entity("yam"));
-        ds.put(new Entity("yam"));
-        assertEquals(2, ds.prepare(new Query("yam")).countEntities(withLimit(10)));
-    }
-
-    @Test
-    public void testInsert1() {
-        doTest();
-    }
-
-    @Test
-    public void testInsert2() {
-        doTest();
     }
 }

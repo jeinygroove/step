@@ -2,6 +2,8 @@ package com.google.sps.data;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.repackaged.com.google.common.annotations.VisibleForTesting;
+
 import java.util.*;
 
 /**
@@ -17,9 +19,10 @@ public class Comments {
     /**
      * Represents the comment.
      */
+    @VisibleForTesting
     public static class Comment {
-        Date date;
-        String text;
+        private final Date date;
+        private final String text;
         long rating;
 
         /** Creates the comment with specified fields.
@@ -62,9 +65,19 @@ public class Comments {
                 return false;
             }
             Comment otherComment = (Comment) obj;
-            return this.date.equals(otherComment.date)
+            return Objects.equals(this.date, otherComment.date)
                     && this.rating == otherComment.rating
-                    && this.text.equals(otherComment.text);
+                    && Objects.equals(this.text, otherComment.text);
+        }
+
+        //Idea from effective Java : Item 9
+        @Override
+        public int hashCode() {
+            int result = 17;
+            result = 31 * result + date.hashCode();
+            result = 31 * result + text.hashCode();
+            result = 31 * result + Long.hashCode(rating);
+            return result;
         }
     }
 

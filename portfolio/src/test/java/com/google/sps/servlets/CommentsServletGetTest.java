@@ -1,11 +1,10 @@
-package com.google.sps;
+package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.Gson;
 import com.google.sps.data.Comments;
-import com.google.sps.servlets.CommentsServlet;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +13,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.*;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.when;
 
 public class CommentsServletGetTest extends ServletTest {
@@ -44,12 +44,12 @@ public class CommentsServletGetTest extends ServletTest {
         writer.flush();
         String result = stringWriter.toString();
 
-        System.out.println(result);
         List<Map.Entry<Long, Comments.Comment>> expected =
                 Arrays.asList(new AbstractMap.SimpleEntry(
                         commentEntity.getKey().getId(),
                         Comments.Comment.getCommentFromEntity(commentEntity)));
-        assert (result.equals(gson.toJson(expected)));
+
+        assertThat(result).isEqualTo(gson.toJson(expected));
     }
 
     @Test
@@ -103,7 +103,8 @@ public class CommentsServletGetTest extends ServletTest {
                                 comment2.getKey().getId(),
                                 Comments.Comment.getCommentFromEntity(comment2))
                 );
-        assert (result.equals(gson.toJson(expected)));
+
+        assertThat(result).isEqualTo(gson.toJson(expected));
     }
 
     @Test
@@ -154,6 +155,7 @@ public class CommentsServletGetTest extends ServletTest {
                                 comment2.getKey().getId(),
                                 Comments.Comment.getCommentFromEntity(comment2))
                 );
-        assert (result.equals(gson.toJson(expected)));
+
+        assertThat(result).isEqualTo(gson.toJson(expected));
     }
 }
