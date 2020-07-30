@@ -36,8 +36,8 @@ public final class FindMeetingQuery {
     // Events    : ___|--A--|__
     // TimePoints: 0  1     2 3
     // Hash map looks like {0=1=0, 1=-1=0, 2=1=0, 3=-1=0}.
-    // +1 for 0 and 2, because A starts the day without a meeting/finishes the meeting
-    // -1 for 1 and 3, because it's the end of the day/A goes to the meeting
+    // +1 for mandatory attendees for 0 and 2, because A starts the day without a meeting/finishes the meeting
+    // -1 for mandatory attendees for 1 and 3, because it's the end of the day/A goes to the meeting
     HashMap<Integer, Map.Entry<Long, Long>> timePointsOfAvailabilityChange = new HashMap<>();
     Collection<String> mandatoryAttendees = request.getAttendees();
     Collection<String> optionalAttendees = request.getOptionalAttendees();
@@ -65,32 +65,34 @@ public final class FindMeetingQuery {
       optAttendeesOfExistingEvent.retainAll(optionalAttendees);
 
       // if intersection isn't empty, then it's a time moment, where the available
-      // number of attendees changes
-      if (!mandAttendeesOfExistingEvent.isEmpty() || !optAttendeesOfExistingEvent.isEmpty()) {
-        Map.Entry<Long, Long> timePointChanges;
-        long changeOfMandAttendees, changeOfOptAttendees;
-        int eventStartTime = existingEvent.getWhen().start();
-        int eventEndTime = existingEvent.getWhen().end();
-
-        int mandAttendeesOfExistingEventSize = mandAttendeesOfExistingEvent.size();
-        int optAttendeesOfExistingEventSize = optAttendeesOfExistingEvent.size();
-
-        timePointChanges = timePointsOfAvailabilityChange.getOrDefault(eventStartTime,
-                new AbstractMap.SimpleEntry<>(0L, 0L));
-        changeOfMandAttendees = timePointChanges.getKey();
-        changeOfOptAttendees = timePointChanges.getValue();
-        timePointsOfAvailabilityChange.put(eventStartTime,  new AbstractMap.SimpleEntry<>(
-                changeOfMandAttendees - mandAttendeesOfExistingEvent.size(),
-                changeOfOptAttendees - optAttendeesOfExistingEvent.size()));
-
-        timePointChanges = timePointsOfAvailabilityChange.getOrDefault(eventEndTime,
-                new AbstractMap.SimpleEntry<>(0L, 0L));
-        changeOfMandAttendees = timePointChanges.getKey();
-        changeOfOptAttendees = timePointChanges.getValue();
-        timePointsOfAvailabilityChange.put(eventEndTime,  new AbstractMap.SimpleEntry<>(
-                changeOfMandAttendees + mandAttendeesOfExistingEventSize,
-                changeOfOptAttendees + optAttendeesOfExistingEventSize));
+      // number of attendees changes, in other case, we skip this event
+      if (mandAttendeesOfExistingEvent.isEmpty() && optAttendeesOfExistingEvent.isEmpty()) {
+        continue;
       }
+
+      Map.Entry<Long, Long> timePointChanges;
+      long changeOfMandAttendees, changeOfOptAttendees;
+      int eventStartTime = existingEvent.getWhen().start();
+      int eventEndTime = existingEvent.getWhen().end();
+
+      int mandAttendeesOfExistingEventSize = mandAttendeesOfExistingEvent.size();
+      int optAttendeesOfExistingEventSize = optAttendeesOfExistingEvent.size();
+
+      timePointChanges = timePointsOfAvailabilityChange.getOrDefault(eventStartTime,
+              new AbstractMap.SimpleEntry<>(0L, 0L));
+      changeOfMandAttendees = timePointChanges.getKey();
+      changeOfOptAttendees = timePointChanges.getValue();
+      timePointsOfAvailabilityChange.put(eventStartTime, new AbstractMap.SimpleEntry<>(
+              changeOfMandAttendees - mandAttendeesOfExistingEvent.size(),
+              changeOfOptAttendees - optAttendeesOfExistingEvent.size()));
+
+      timePointChanges = timePointsOfAvailabilityChange.getOrDefault(eventEndTime,
+              new AbstractMap.SimpleEntry<>(0L, 0L));
+      changeOfMandAttendees = timePointChanges.getKey();
+      changeOfOptAttendees = timePointChanges.getValue();
+      timePointsOfAvailabilityChange.put(eventEndTime, new AbstractMap.SimpleEntry<>(
+              changeOfMandAttendees + mandAttendeesOfExistingEventSize,
+              changeOfOptAttendees + optAttendeesOfExistingEventSize));
     }
 
     List<Integer> sortedTimes =
