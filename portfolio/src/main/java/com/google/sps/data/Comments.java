@@ -74,8 +74,8 @@ public class Comments {
         @Override
         public int hashCode() {
             int result = 17;
-            result = 31 * result + date.hashCode();
-            result = 31 * result + text.hashCode();
+            result = 31 * result + Objects.hashCode(date);
+            result = 31 * result + Objects.hashCode(text);
             result = 31 * result + Long.hashCode(rating);
             return result;
         }
