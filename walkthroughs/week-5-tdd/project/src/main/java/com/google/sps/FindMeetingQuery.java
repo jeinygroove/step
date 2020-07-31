@@ -23,8 +23,6 @@ public final class FindMeetingQuery {
     long mandatoryAttendees;
     long optionalAttendees;
 
-    public AvailabilityChange() {}
-
     public AvailabilityChange(long mandatoryAttendees, long optionalAttendees) {
       this.mandatoryAttendees = mandatoryAttendees;
       this.optionalAttendees = optionalAttendees;
@@ -91,7 +89,7 @@ public final class FindMeetingQuery {
       int optAttendeesOfExistingEventSize = optAttendeesOfExistingEvent.size();
 
       timePointChanges = timePointsOfAvailabilityChange.getOrDefault(eventStartTime,
-              new AvailabilityChange());
+              new AvailabilityChange(0L, 0L));
       changeOfMandAttendees = timePointChanges.mandatoryAttendees;
       changeOfOptAttendees = timePointChanges.optionalAttendees;
       timePointsOfAvailabilityChange.put(eventStartTime, new AvailabilityChange(
@@ -99,7 +97,7 @@ public final class FindMeetingQuery {
               changeOfOptAttendees - optAttendeesOfExistingEvent.size()));
 
       timePointChanges = timePointsOfAvailabilityChange.getOrDefault(eventEndTime,
-              new AvailabilityChange());
+              new AvailabilityChange(0L, 0L));
       changeOfMandAttendees = timePointChanges.mandatoryAttendees;
       changeOfOptAttendees = timePointChanges.optionalAttendees;
       timePointsOfAvailabilityChange.put(eventEndTime, new AvailabilityChange(
