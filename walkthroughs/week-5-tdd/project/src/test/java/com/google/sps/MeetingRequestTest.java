@@ -14,13 +14,8 @@
 
 package com.google.sps;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,8 +25,6 @@ import org.junit.runners.JUnit4;
 public final class MeetingRequestTest {
   // Some people that we can use in our tests.
   private static final String PERSON_A = "Person A";
-  private static final String PERSON_B = "Person B";
-  private static final String PERSON_C = "Person C";
 
   private static final int DURATION_1_HOUR = 60;
 
