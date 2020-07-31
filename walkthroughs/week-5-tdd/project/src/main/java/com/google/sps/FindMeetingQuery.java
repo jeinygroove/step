@@ -19,6 +19,18 @@ import java.util.stream.Collectors;
 
 public final class FindMeetingQuery {
 
+  private class AvailabilityChange {
+    long mandatoryAttendees = 0L;
+    long optionalAttendees = 0L;
+
+    public AvailabilityChange() {}
+
+    public AvailabilityChange(long mandatoryAttendees, long optionalAttendees) {
+      this.mandatoryAttendees = mandatoryAttendees;
+      this.optionalAttendees = optionalAttendees;
+    }
+  }
+
   /**
    * Returns collection of time slots, in which we can book the meeting.
    * The event has mandatory and optional attendees. We should find time slots
@@ -38,7 +50,7 @@ public final class FindMeetingQuery {
     // Hash map looks like {0=1=0, 1=-1=0, 2=1=0, 3=-1=0}.
     // +1 for mandatory attendees for 0 and 2, because A starts the day without a meeting/finishes the meeting
     // -1 for mandatory attendees for 1 and 3, because it's the end of the day/A goes to the meeting
-    HashMap<Integer, Map.Entry<Long, Long>> timePointsOfAvailabilityChange = new HashMap<>();
+    HashMap<Integer, AvailabilityChange> timePointsOfAvailabilityChange = new HashMap<>();
     Collection<String> mandatoryAttendees = request.getAttendees();
     Collection<String> optionalAttendees = request.getOptionalAttendees();
 
@@ -49,10 +61,10 @@ public final class FindMeetingQuery {
 
     // add start and end times of the day
     timePointsOfAvailabilityChange.put(0,
-            new AbstractMap.SimpleEntry<>(numOfMandAttendeesRequired,
+            new AvailabilityChange(numOfMandAttendeesRequired,
                     numOfOptAttendeesRequired));
     timePointsOfAvailabilityChange.put(TimeRange.WHOLE_DAY.end(),
-            new AbstractMap.SimpleEntry<>(-numOfMandAttendeesRequired,
+            new AvailabilityChange(-numOfMandAttendeesRequired,
                     -numOfOptAttendeesRequired));
 
     // add all time point, where the number of free attendees is changing
@@ -70,7 +82,7 @@ public final class FindMeetingQuery {
         continue;
       }
 
-      Map.Entry<Long, Long> timePointChanges;
+      AvailabilityChange timePointChanges;
       long changeOfMandAttendees, changeOfOptAttendees;
       int eventStartTime = existingEvent.getWhen().start();
       int eventEndTime = existingEvent.getWhen().end();
@@ -79,18 +91,18 @@ public final class FindMeetingQuery {
       int optAttendeesOfExistingEventSize = optAttendeesOfExistingEvent.size();
 
       timePointChanges = timePointsOfAvailabilityChange.getOrDefault(eventStartTime,
-              new AbstractMap.SimpleEntry<>(0L, 0L));
-      changeOfMandAttendees = timePointChanges.getKey();
-      changeOfOptAttendees = timePointChanges.getValue();
-      timePointsOfAvailabilityChange.put(eventStartTime, new AbstractMap.SimpleEntry<>(
+              new AvailabilityChange());
+      changeOfMandAttendees = timePointChanges.mandatoryAttendees;
+      changeOfOptAttendees = timePointChanges.optionalAttendees;
+      timePointsOfAvailabilityChange.put(eventStartTime, new AvailabilityChange(
               changeOfMandAttendees - mandAttendeesOfExistingEvent.size(),
               changeOfOptAttendees - optAttendeesOfExistingEvent.size()));
 
       timePointChanges = timePointsOfAvailabilityChange.getOrDefault(eventEndTime,
-              new AbstractMap.SimpleEntry<>(0L, 0L));
-      changeOfMandAttendees = timePointChanges.getKey();
-      changeOfOptAttendees = timePointChanges.getValue();
-      timePointsOfAvailabilityChange.put(eventEndTime, new AbstractMap.SimpleEntry<>(
+              new AvailabilityChange());
+      changeOfMandAttendees = timePointChanges.mandatoryAttendees;
+      changeOfOptAttendees = timePointChanges.optionalAttendees;
+      timePointsOfAvailabilityChange.put(eventEndTime, new AvailabilityChange(
               changeOfMandAttendees + mandAttendeesOfExistingEventSize,
               changeOfOptAttendees + optAttendeesOfExistingEventSize));
     }
@@ -108,8 +120,8 @@ public final class FindMeetingQuery {
 
     // find time slots with the help of scan line method
     for (int currentTime : sortedTimes) {
-      long changeOfMandAttendees = timePointsOfAvailabilityChange.get(currentTime).getKey();
-      long changeOfOptAttendees = timePointsOfAvailabilityChange.get(currentTime).getValue();
+      long changeOfMandAttendees = timePointsOfAvailabilityChange.get(currentTime).mandatoryAttendees;
+      long changeOfOptAttendees = timePointsOfAvailabilityChange.get(currentTime).optionalAttendees;
       numberOfAttendeesCurrentlyAvailable =
               numberOfMandatoryAttendeesCurrentlyAvailable + numberOfOptionalAttendeesCurrentlyAvailable;
 

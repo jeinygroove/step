@@ -40,7 +40,7 @@ public final class MeetingRequest {
   private final long duration;
 
   public MeetingRequest(Collection<String> attendees, long duration) {
-    this(attendees, Collections.EMPTY_LIST ,  duration);
+    this(attendees, Collections.EMPTY_LIST, duration);
   }
 
   public MeetingRequest(Collection<String> mandatoryAttendees, Collection<String> optionalAttendees, long duration) {

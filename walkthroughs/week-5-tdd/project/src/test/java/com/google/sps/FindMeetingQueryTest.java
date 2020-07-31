@@ -373,7 +373,7 @@ public final class FindMeetingQueryTest {
   }
 
   @Test
-  public void availableGapsForEventWithoutMandatoryAttendees() {
+  public void availableGapsForEventWithoutMandatoryAttendeesWithoutOverlapping() {
     // Have only optional attendees.
     // We should see two options because all optional
     // attendees can have a meeting.
@@ -403,7 +403,7 @@ public final class FindMeetingQueryTest {
   }
 
   @Test
-  public void noEnoughRoomForEventWithoutMandatoryAttendees() {
+  public void noEnoughRoomForEventWithoutMandatoryAttendeesWithOverlapping() {
     // Have only optional attendees.
     // We should see a whole day option,
     // because all zero mandatory attendees
@@ -420,6 +420,35 @@ public final class FindMeetingQueryTest {
             new Event("Event 2", TimeRange.fromStartEnd(TIME_0900AM, TimeRange.END_OF_DAY, true),
                     Arrays.asList(PERSON_A)),
             new Event("Event 3", TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES),
+                    Arrays.asList(PERSON_B)));
+
+    MeetingRequest request =
+            new MeetingRequest(Arrays.asList(PERSON_C), Arrays.asList(PERSON_A, PERSON_B), DURATION_30_MINUTES);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected = Arrays.asList(TimeRange.WHOLE_DAY);
+
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void noEnoughRoomForEventWithoutMandatoryAttendees() {
+    // Have only optional attendees.
+    // We should see a whole day option,
+    // because all zero mandatory attendees
+    // don't have meetings in that day.
+    //
+    // Events  : |--------A--|     |--A--------|
+    //                       |------B------|
+    // Day     : |-----------------------------|
+    // Options : |-----------------------------|
+
+    Collection<Event> events = Arrays.asList(
+            new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
+                    Arrays.asList(PERSON_A)),
+            new Event("Event 2", TimeRange.fromStartEnd(TIME_0900AM, TimeRange.END_OF_DAY, true),
+                    Arrays.asList(PERSON_A)),
+            new Event("Event 3", TimeRange.fromStartDuration(TIME_0830AM, DURATION_2_HOUR),
                     Arrays.asList(PERSON_B)));
 
     MeetingRequest request =
