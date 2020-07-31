@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 public final class FindMeetingQuery {
 
   private class AvailabilityChange {
-    long mandatoryAttendees = 0L;
-    long optionalAttendees = 0L;
+    long mandatoryAttendees;
+    long optionalAttendees;
 
     public AvailabilityChange() {}
 
