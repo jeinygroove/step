@@ -81,7 +81,8 @@ public final class FindMeetingQuery {
       }
 
       AvailabilityChange timePointChanges;
-      long changeOfMandAttendees, changeOfOptAttendees;
+      long changeOfMandAttendees;
+      long changeOfOptAttendees;
       int eventStartTime = existingEvent.getWhen().start();
       int eventEndTime = existingEvent.getWhen().end();
 
