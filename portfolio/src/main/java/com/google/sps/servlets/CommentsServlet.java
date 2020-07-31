@@ -14,9 +14,12 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.repackaged.com.google.common.annotations.VisibleForTesting;
 import com.google.sps.data.Comments;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.sql.Date;
+import java.time.Clock;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +30,20 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/comments")
 public class CommentsServlet extends HttpServlet {
-
+    private Clock clock;
+    private enum Actions { ADD, DELETE, VOTE }
     private Comments comments;
     private final Gson gson = new Gson();
+
+    public CommentsServlet() {
+        this(Clock.systemUTC());
+    }
+
+    @VisibleForTesting
+    CommentsServlet(Clock clock) {
+        super();
+        this.clock = clock;
+    }
 
     @Override
     public void init() {
@@ -55,8 +69,8 @@ public class CommentsServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             if ("all".equals(quantity.toLowerCase())) {
                 switch (type) {
-                    case Comments.DATE: response.getWriter().println(gson.toJson(comments.sortByDate())); break;
-                    case Comments.RATING: response.getWriter().println(gson.toJson(comments.sortByRating())); break;
+                    case Comments.DATE: response.getWriter().print(gson.toJson(comments.sortByDate())); break;
+                    case Comments.RATING: response.getWriter().print(gson.toJson(comments.sortByRating())); break;
                     default: response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown value of 'type', it must be 'date' or 'rating'");
                 }
             } else {
@@ -66,8 +80,8 @@ public class CommentsServlet extends HttpServlet {
         }
 
         switch (type) {
-            case Comments.DATE: response.getWriter().println(gson.toJson(comments.sortByDate(numberOfComments))); break;
-            case Comments.RATING: response.getWriter().println(gson.toJson(comments.sortByRating(numberOfComments))); break;
+            case Comments.DATE: response.getWriter().print(gson.toJson(comments.sortByDate(numberOfComments))); break;
+            case Comments.RATING: response.getWriter().print(gson.toJson(comments.sortByRating(numberOfComments))); break;
             default: response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown value of 'type', it must be 'date' or 'rating'");
         }
     }
@@ -78,19 +92,21 @@ public class CommentsServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         final String commentsPage = "/comments.html";
-        String action = request.getParameter("action");
-        if (action == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'action' doesn't exist");
+        Actions action;
+        try {
+            action = Actions.valueOf(request.getParameter("action").toUpperCase());
+        } catch (IllegalArgumentException noActionException) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'action' doesn't exist or is invalid");
             return;
         }
 
         // if we want to add comment, then there's no commentID
-        if ("add".equals(action)) {
+        if (Actions.ADD == action) {
             String text = request.getParameter(Comments.TEXT);
             if (text == null) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'text' doesn't exist, required for action 'add'");
             } else {
-                comments.addComment(text);
+                comments.addComment(text, Date.from(clock.instant()));
                 response.sendRedirect(commentsPage);
             }
             return;
@@ -106,7 +122,7 @@ public class CommentsServlet extends HttpServlet {
         }
 
         switch (action) {
-            case "vote": {
+            case VOTE: {
                 String isUpvote = request.getParameter("isUpvote");
                 if ("true".equals(isUpvote)) {
                     comments.upvoteComment(commentID);
@@ -118,7 +134,7 @@ public class CommentsServlet extends HttpServlet {
                 }
                 break;
             }
-            case "delete": comments.deleteComment(commentID); break;
+            case DELETE: comments.deleteComment(commentID); break;
             default: response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown value of parameter 'action'"); return;
         }
         response.sendRedirect(commentsPage);

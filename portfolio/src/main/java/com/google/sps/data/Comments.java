@@ -2,6 +2,8 @@ package com.google.sps.data;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.repackaged.com.google.common.annotations.VisibleForTesting;
+
 import java.util.*;
 
 /**
@@ -9,7 +11,7 @@ import java.util.*;
  * @author Olga Shimanskaia <olgashimanskaia@gmail.com>
  */
 public class Comments {
-    private static final String COMMENT_ENTITY_KIND = "Comment";
+    public static final String COMMENT_ENTITY_KIND = "Comment";
     public static final String DATE = "date";
     public static final String RATING = "rating";
     public static final String TEXT = "comment-text";
@@ -17,9 +19,10 @@ public class Comments {
     /**
      * Represents the comment.
      */
-    private static class Comment {
-        Date date;
-        String text;
+    @VisibleForTesting
+    public static class Comment {
+        private final Date date;
+        private final String text;
         long rating;
 
         /** Creates the comment with specified fields.
@@ -31,6 +34,50 @@ public class Comments {
             this.date = date;
             this.text = text;
             this.rating = rating;
+        }
+
+        public Date getDate() {
+            return date;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        /**
+         * Gets the comment from comment entity.
+         * @param entity    Entity of the "Comment" kind
+         * @return A Comment object with fields retrieved from the entity.
+         */
+        public static Comment getCommentFromEntity(Entity entity) {
+            Date date = (Date) entity.getProperty(DATE);
+            String text = (String) entity.getProperty(TEXT);
+            long rating = (long) entity.getProperty(RATING);
+            return new Comment(date, text, rating);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null || getClass() != obj.getClass()) {
+                return false;
+            }
+            Comment otherComment = (Comment) obj;
+            return Objects.equals(this.date, otherComment.date)
+                    && this.rating == otherComment.rating
+                    && Objects.equals(this.text, otherComment.text);
+        }
+
+        //Idea from effective Java : Item 9
+        @Override
+        public int hashCode() {
+            int result = 17;
+            result = 31 * result + Objects.hashCode(date);
+            result = 31 * result + Objects.hashCode(text);
+            result = 31 * result + Long.hashCode(rating);
+            return result;
         }
     }
 
@@ -44,25 +91,13 @@ public class Comments {
      * Creates the comment with the specified text and puts it to the datastore.
      * @param text      The comment's text.
      */
-    public void addComment(String text) {
+    public void addComment(String text, Date date) {
         Entity commentEntity = new Entity(COMMENT_ENTITY_KIND);
-        commentEntity.setProperty(DATE, new Date());
+        commentEntity.setProperty(DATE, date);
         commentEntity.setProperty(TEXT, text);
         commentEntity.setProperty(RATING, 0);
 
         datastore.put(commentEntity);
-    }
-
-    /**
-     * Gets the comment from comment entity.
-     * @param entity    Entity of the "Comment" kind
-     * @return A Comment object with fields retrieved from the entity.
-     */
-    private Comment getCommentFromEntity(Entity entity) {
-        Date date = (Date) entity.getProperty(DATE);
-        String text = (String) entity.getProperty(TEXT);
-        long rating = (long) entity.getProperty(RATING);
-        return new Comment(date, text, rating);
     }
 
     /**
@@ -85,7 +120,7 @@ public class Comments {
 
         for (Entity entity : commentEntities.asIterable()) {
             long id = entity.getKey().getId();
-            Comment comment = getCommentFromEntity(entity);
+            Comment comment = Comment.getCommentFromEntity(entity);
             result.add(new AbstractMap.SimpleEntry(id, comment));
         }
 
@@ -104,7 +139,7 @@ public class Comments {
 
         for (Entity entity : commentEntities) {
             long id = entity.getKey().getId();
-            Comment comment = getCommentFromEntity(entity);
+            Comment comment = Comment.getCommentFromEntity(entity);
             result.add(new AbstractMap.SimpleEntry(id, comment));
         }
 
