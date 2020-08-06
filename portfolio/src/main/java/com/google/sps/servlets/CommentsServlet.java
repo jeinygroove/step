@@ -17,9 +17,12 @@ package com.google.sps.servlets;
 import com.google.appengine.repackaged.com.google.common.annotations.VisibleForTesting;
 import com.google.sps.data.Comments;
 import com.google.gson.Gson;
+import com.google.sps.data.UserManager;
+
 import java.io.IOException;
 import java.sql.Date;
 import java.time.Clock;
+import java.util.Objects;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -91,6 +94,13 @@ public class CommentsServlet extends HttpServlet {
      */
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String userID = UserManager.getCurrentUserId();
+
+        if (userID == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "User needs to authorize, before making actions with comments");
+            return;
+        }
+
         final String commentsPage = "/comments.html";
         Actions action;
         try {
@@ -106,7 +116,7 @@ public class CommentsServlet extends HttpServlet {
             if (text == null) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parameter 'text' doesn't exist, required for action 'add'");
             } else {
-                comments.addComment(text, Date.from(clock.instant()));
+                comments.addComment(userID, text, Date.from(clock.instant()));
                 response.sendRedirect(commentsPage);
             }
             return;
@@ -134,7 +144,21 @@ public class CommentsServlet extends HttpServlet {
                 }
                 break;
             }
-            case DELETE: comments.deleteComment(commentID); break;
+            case DELETE: {
+                if (!comments.isCommentExist(commentID)) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Comment with this id doesn't exist");
+                    return;
+                }
+
+                String authorID = comments.getCommentAuthorID(commentID);
+                if (!Objects.equals(userID, authorID)) {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN, "This user isn't allowed to delete the comment, because he isn't the author");
+                    return;
+                }
+
+                comments.deleteComment(commentID);
+                break;
+            }
             default: response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown value of parameter 'action'"); return;
         }
         response.sendRedirect(commentsPage);
