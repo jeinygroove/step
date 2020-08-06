@@ -1,3 +1,6 @@
+/**
+ * Authenticates the user.
+ */
 function init() {
     fetch('/auth', { method: 'GET' }).then(response => response.json()).then(authResult => {
         if (authResult.isLoggedIn) {
@@ -11,6 +14,7 @@ function init() {
 
 /**
  * Adds Sign In button to the nav bar.
+ * @param {String}  loginUrl    URL for login
  */
 function addSignInBtn(loginUrl) {
     document.querySelector('nav').insertAdjacentHTML('beforeEnd',
@@ -23,6 +27,7 @@ function addSignInBtn(loginUrl) {
 
 /**
  * Adds logout button to the nav bar.
+ * @param {String}  logoutUrl    URL for logout
  */
 function addLogoutBtn(logoutUrl) {
     document.querySelector('nav').insertAdjacentHTML('beforeEnd',
