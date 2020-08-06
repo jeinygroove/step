@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 import org.junit.After;
 import org.junit.Before;
 
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Collections;
 
 /**
  * Setups the environment and gives a configuration for
@@ -21,9 +23,19 @@ import java.io.StringWriter;
  * @author Olga Shimanskaia <olgashimanskaia@gmail.com>
  */
 public class ServletTest {
-
+    protected final String testUserId = "test_user";
     protected final LocalServiceTestHelper helper =
-            new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+            new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig(),
+                    new LocalUserServiceTestConfig())
+                    .setEnvIsLoggedIn(true)
+                    .setEnvEmail("test-user@test.com")
+                    .setEnvAuthDomain("test.com")
+                    .setEnvAttributes(
+                            Collections.singletonMap(
+                                    "com.google.appengine.api.users.UserService.user_id_key",
+                                    testUserId
+                            )
+                    );
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;
