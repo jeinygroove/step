@@ -31,8 +31,10 @@ nav {
     background-color: #22C9E0;
     position: fixed;
     display: flex;
+    justify-content: space-between;
     flex-direction: row;
     width: 100%;
+    height: 60px;
     align-items: center;
     z-index: 1000;
 }
@@ -62,4 +64,19 @@ nav {
 .nav-item:hover, .nav-item:focus {
     border-bottom: 2px solid white;
     padding-bottom: 1px;
+}
+
+.log-btn {
+    padding-right: 50px;
+    width: 100px;
+    color: white;
+    font-size: 17pt;
+    font-weight: bold;
+}
+
+.nav-log {
+    width: 100%;
+    text-align: center;
+    border: 2px solid white;
+    padding: 5px;
 }
