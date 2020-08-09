@@ -2,13 +2,11 @@ package com.google.sps.servlets;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 import org.junit.After;
 import org.junit.Before;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

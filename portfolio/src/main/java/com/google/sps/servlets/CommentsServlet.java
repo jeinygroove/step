@@ -18,7 +18,6 @@ import com.google.appengine.repackaged.com.google.common.annotations.VisibleForT
 import com.google.sps.data.Comments;
 import com.google.gson.Gson;
 import com.google.sps.data.UserManager;
-
 import java.io.IOException;
 import java.sql.Date;
 import java.time.Clock;
@@ -145,7 +144,7 @@ public class CommentsServlet extends HttpServlet {
                 break;
             }
             case DELETE: {
-                if (!comments.isCommentExist(commentID)) {
+                if (!comments.commentExists(commentID)) {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, "Comment with this id doesn't exist");
                     return;
                 }

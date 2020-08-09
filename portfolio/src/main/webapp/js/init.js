@@ -1,5 +1,5 @@
 /**
- * Authenticates the user.
+ * Checks if current user is logged in.
  */
 function init() {
     fetch('/auth', { method: 'GET' }).then(response => response.json()).then(authResult => {

@@ -124,7 +124,7 @@ public class Comments {
      * @param id    Id of the "Comment" entity
      * @return true, if comment exists, and false if not
      */
-    public boolean isCommentExist(long id) {
+    public boolean commentExists(long id) {
         Key commentEntityKey = KeyFactory.createKey(COMMENT_ENTITY_KIND, id);
         Query.Filter keyFilter =
                 new Query.FilterPredicate(Entity.KEY_RESERVED_PROPERTY, Query.FilterOperator.EQUAL, commentEntityKey);

@@ -2,9 +2,8 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.*;
 import com.google.sps.data.Comments;
-import com.google.sps.data.User;
+import com.google.sps.data.UserManager;
 import org.junit.Test;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,7 +34,7 @@ public class CommentsServletPostTest extends ServletTest {
     @Test
     public void testAddComment() throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        String currentUserID = User.getCurrentUserId();
+        String currentUserID = UserManager.getCurrentUserId();
 
         when(request.getParameter("action")).thenReturn("add");
         when(request.getParameter(Comments.TEXT)).thenReturn(commentText);
@@ -94,7 +93,7 @@ public class CommentsServletPostTest extends ServletTest {
     @Test
     public void testDeleteComment() throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        String currentUserID = User.getCurrentUserId();
+        String currentUserID = UserManager.getCurrentUserId();
 
         Entity comment = new Entity(Comments.COMMENT_ENTITY_KIND);
         comment.setProperty(Comments.DATE, new Date());
@@ -118,7 +117,7 @@ public class CommentsServletPostTest extends ServletTest {
     @Test
     public void testDeleteOtherUserComment() throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        String currentUserID = User.getCurrentUserId();
+        String currentUserID = UserManager.getCurrentUserId();
 
         Entity comment = new Entity(Comments.COMMENT_ENTITY_KIND);
         comment.setProperty(Comments.DATE, new Date());
@@ -174,7 +173,7 @@ public class CommentsServletPostTest extends ServletTest {
     private void testVoteComment(Boolean isUpvote) throws IOException {
         final String commentText = "some comment";
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        String currentUserID = User.getCurrentUserId();
+        String currentUserID = UserManager.getCurrentUserId();
 
         Entity comment = new Entity(Comments.COMMENT_ENTITY_KIND);
         comment.setProperty(Comments.DATE, Date.from(testClock.instant()));
