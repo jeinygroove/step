@@ -1,5 +1,6 @@
 const sortItemName = 'sortType';
 const quantityItemName = 'commentsQuantity';
+const currentUserIDItemName = 'currentUserID';
 
 var selectedSortType = localStorage.getItem(sortItemName, selectedSortType);
 var selectedQuantityOfComments = localStorage.getItem(quantityItemName, selectedQuantityOfComments);
@@ -16,12 +17,13 @@ function getComments(type, quantity) {
     params.append('quantity', quantity);
     url.search = params.toString();
     fetch(url, {method: 'GET'}).then(response => response.json()).then((comments) => {
+        const currentUserID = localStorage.getItem(currentUserIDItemName);
         const listOfCommentsDOM = document.querySelector('.comments-list');
         listOfCommentsDOM.innerHTML = '';
         for (var i = 0; i < comments.length; i++) {
             const comment = comments[i];
             listOfCommentsDOM.appendChild(
-                createListElement(comment.value.text, comment.value.rating, comment.value.date, comment.key));
+                createListElement(comment.value, comment.key, currentUserID));
         }
     });
 }
@@ -77,31 +79,34 @@ if (selectedQuantityOfComments == null) selectedQuantityOfComments = 'all';
 getComments(selectedSortType, selectedQuantityOfComments);
 
 /** Creates an <li class="comment"> element.
- * @param  {String} text       comment text
- * @param  {number} rating     rating of the comment
- * @param  {String} date       date of the comment publication
+ * @param  {Object} comment       comment
  * @param  {String} commentID  comment id
+ * @param  {String} userID     current userID
  */
-function createListElement(text, rating, date, commentID) {
+function createListElement(comment, commentID, userID) {
     const liElement = document.createElement('li');
     liElement.classList.add('comment');
     liElement.id = commentID;
     liElement.innerHTML = `
         <div class="vote-btns">
             <div class="upvote-btn" type="button"></div>
-            <p class="rating">` + rating + `</p>
+            <p class="rating">` + comment.rating + `</p>
             <div class="downvote-btn" type="button"></div>
-        </div>
-        <img class="delete-btn" src="images/delete-btn4.png">
-        <div class="comment-content">
-            <p class="comment-text">` + text + `</p>
-            <p class="comment-date">` + date + `</p>
+        </div>` 
+        + ((userID === comment.authorID) ? `<img class="delete-btn" src="images/delete-btn4.png">` : '') +
+        `<div class="comment-content">
+            <p class="comment-text">` + comment.text + `</p>
+            <p class="comment-date">` + comment.date + `</p>
         </div>`;
 
     // add event listeners for delete and vote buttons
-    liElement.querySelector('.delete-btn').addEventListener('click', function() {
-        deleteComment(commentID);
-    });
+    const deleteBtnDOM = liElement.querySelector('.delete-btn');
+    if (deleteBtnDOM != null) {
+        deleteBtnDOM.addEventListener('click', function() {
+            deleteComment(commentID);
+        });
+    }
+
     liElement.querySelector('.upvote-btn').addEventListener('click', () => {
         voteComment(true, commentID)
     });

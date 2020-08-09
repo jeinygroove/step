@@ -15,6 +15,7 @@ public class Comments {
     public static final String DATE = "date";
     public static final String RATING = "rating";
     public static final String TEXT = "comment-text";
+    public static final String AUTHOR_ID = "author-id";
 
     /**
      * Represents the comment.
@@ -23,16 +24,19 @@ public class Comments {
     public static class Comment {
         private final Date date;
         private final String text;
+        private final String authorID;
         long rating;
 
         /** Creates the comment with specified fields.
          * @param date      The date of sending a comment.
          * @param text      The comment's text.
+         * @param authorID  The comment's author.
          * @param rating    The comment's rating.
          */
-        public Comment(Date date, String text, long rating) {
+        public Comment(Date date, String text, String authorID, long rating) {
             this.date = date;
             this.text = text;
+            this.authorID = authorID;
             this.rating = rating;
         }
 
@@ -52,8 +56,9 @@ public class Comments {
         public static Comment getCommentFromEntity(Entity entity) {
             Date date = (Date) entity.getProperty(DATE);
             String text = (String) entity.getProperty(TEXT);
+            String authorID = (String) entity.getProperty(AUTHOR_ID);
             long rating = (long) entity.getProperty(RATING);
-            return new Comment(date, text, rating);
+            return new Comment(date, text, authorID, rating);
         }
 
         @Override
@@ -66,8 +71,9 @@ public class Comments {
             }
             Comment otherComment = (Comment) obj;
             return Objects.equals(this.date, otherComment.date)
-                    && this.rating == otherComment.rating
-                    && Objects.equals(this.text, otherComment.text);
+                    && Objects.equals(this.text, otherComment.text)
+                    && Objects.equals(this.authorID, otherComment.authorID)
+                    && this.rating == otherComment.rating;
         }
 
         //Idea from effective Java : Item 9
@@ -76,6 +82,7 @@ public class Comments {
             int result = 17;
             result = 31 * result + Objects.hashCode(date);
             result = 31 * result + Objects.hashCode(text);
+            result = 31 * result + Objects.hashCode(authorID);
             result = 31 * result + Long.hashCode(rating);
             return result;
         }
@@ -89,13 +96,16 @@ public class Comments {
 
     /**
      * Creates the comment with the specified text and puts it to the datastore.
-     * @param text      The comment's text.
+     * @param authorID      The id of the comment's author.
+     * @param text          The comment's text.
+     * @param date          The comment's date.
      */
-    public void addComment(String text, Date date) {
+    public void addComment(String authorID, String text, Date date) {
         Entity commentEntity = new Entity(COMMENT_ENTITY_KIND);
         commentEntity.setProperty(DATE, date);
         commentEntity.setProperty(TEXT, text);
         commentEntity.setProperty(RATING, 0);
+        commentEntity.setProperty(AUTHOR_ID, authorID);
 
         datastore.put(commentEntity);
     }
@@ -107,6 +117,20 @@ public class Comments {
     public void deleteComment(long id) {
         Key commentEntityKey = KeyFactory.createKey(COMMENT_ENTITY_KIND, id);
         this.datastore.delete(commentEntityKey);
+    }
+
+    /**
+     * Checks if comment with given id exists or not.
+     * @param id    Id of the "Comment" entity
+     * @return true, if comment exists, and false if not
+     */
+    public boolean commentExists(long id) {
+        Key commentEntityKey = KeyFactory.createKey(COMMENT_ENTITY_KIND, id);
+        Query.Filter keyFilter =
+                new Query.FilterPredicate(Entity.KEY_RESERVED_PROPERTY, Query.FilterOperator.EQUAL, commentEntityKey);
+        Query query = new Query(COMMENT_ENTITY_KIND).setKeysOnly().setFilter(keyFilter);
+        List<Entity> result = this.datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+        return !result.isEmpty();
     }
 
     /**
@@ -219,5 +243,20 @@ public class Comments {
             commentEntity.setProperty(RATING, rating - 1);
             this.datastore.put(commentEntity);
         } catch (EntityNotFoundException ignored) {}
+    }
+
+    /**
+     * Returns id of comment's author with the specified id of its' entity
+     * or null if entity doesn't exist.
+     * @param id    Comments' entity id
+     * @return      Author's id or null
+     */
+    public String getCommentAuthorID(long id) {
+        try {
+            Entity commentEntity = getCommentEntity(id);
+            return (String) commentEntity.getProperty(AUTHOR_ID);
+        } catch (EntityNotFoundException ignored) {
+            return null;
+        }
     }
 }

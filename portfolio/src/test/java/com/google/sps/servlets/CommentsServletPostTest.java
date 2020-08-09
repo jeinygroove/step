@@ -2,8 +2,8 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.*;
 import com.google.sps.data.Comments;
+import com.google.sps.data.UserManager;
 import org.junit.Test;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,6 +34,7 @@ public class CommentsServletPostTest extends ServletTest {
     @Test
     public void testAddComment() throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        String currentUserID = UserManager.getCurrentUserId();
 
         when(request.getParameter("action")).thenReturn("add");
         when(request.getParameter(Comments.TEXT)).thenReturn(commentText);
@@ -46,6 +47,7 @@ public class CommentsServletPostTest extends ServletTest {
 
         Entity expected = new Entity(Comments.COMMENT_ENTITY_KIND);
         expected.setProperty(Comments.DATE, Date.from(testClock.instant()));
+        expected.setProperty(Comments.AUTHOR_ID, currentUserID);
         expected.setProperty(Comments.TEXT, commentText);
         expected.setProperty(Comments.RATING, 0L);
 
@@ -91,9 +93,11 @@ public class CommentsServletPostTest extends ServletTest {
     @Test
     public void testDeleteComment() throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        String currentUserID = UserManager.getCurrentUserId();
 
         Entity comment = new Entity(Comments.COMMENT_ENTITY_KIND);
         comment.setProperty(Comments.DATE, new Date());
+        comment.setProperty(Comments.AUTHOR_ID, currentUserID);
         comment.setProperty(Comments.TEXT, commentText);
         comment.setProperty(Comments.RATING, 0L);
 
@@ -111,6 +115,33 @@ public class CommentsServletPostTest extends ServletTest {
     }
 
     @Test
+    public void testDeleteOtherUserComment() throws IOException {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        String currentUserID = UserManager.getCurrentUserId();
+
+        Entity comment = new Entity(Comments.COMMENT_ENTITY_KIND);
+        comment.setProperty(Comments.DATE, new Date());
+        comment.setProperty(Comments.AUTHOR_ID, currentUserID + "_");
+        comment.setProperty(Comments.TEXT, commentText);
+        comment.setProperty(Comments.RATING, 0L);
+
+        datastore.put(comment);
+
+        when(request.getParameter("action")).thenReturn("delete");
+        when(request.getParameter("comment-id")).thenReturn(Long.toString(comment.getKey().getId()));
+
+        doPostRequest(request, response, null);
+        verify(response).sendError(
+                HttpServletResponse.SC_FORBIDDEN,
+                "This user isn't allowed to delete the comment, because he isn't the author"
+        );
+
+        Query query = new Query(Comments.COMMENT_ENTITY_KIND);
+        List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
+        assertThat(results.size()).isEqualTo(1);
+    }
+
+    @Test
     public void testDeleteNonExistingComment() throws IOException {
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
@@ -118,7 +149,9 @@ public class CommentsServletPostTest extends ServletTest {
         when(request.getParameter("comment-id")).thenReturn("1");
 
         doPostRequest(request, response, null);
-        verify(response).sendRedirect(commentsPage);
+        verify(response).sendError(
+                HttpServletResponse.SC_NOT_FOUND,
+                "Comment with this id doesn't exist");
 
         Query query = new Query(Comments.COMMENT_ENTITY_KIND);
         List<Entity> results = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
@@ -140,9 +173,11 @@ public class CommentsServletPostTest extends ServletTest {
     private void testVoteComment(Boolean isUpvote) throws IOException {
         final String commentText = "some comment";
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        String currentUserID = UserManager.getCurrentUserId();
 
         Entity comment = new Entity(Comments.COMMENT_ENTITY_KIND);
         comment.setProperty(Comments.DATE, Date.from(testClock.instant()));
+        comment.setProperty(Comments.AUTHOR_ID, currentUserID);
         comment.setProperty(Comments.TEXT, commentText);
         comment.setProperty(Comments.RATING, 0L);
 
@@ -160,6 +195,7 @@ public class CommentsServletPostTest extends ServletTest {
 
         Entity expected = new Entity(Comments.COMMENT_ENTITY_KIND);
         expected.setProperty(Comments.DATE, Date.from(testClock.instant()));
+        expected.setProperty(Comments.AUTHOR_ID, currentUserID);
         expected.setProperty(Comments.TEXT, commentText);
         if (isUpvote) {
             expected.setProperty(Comments.RATING, 1L);
